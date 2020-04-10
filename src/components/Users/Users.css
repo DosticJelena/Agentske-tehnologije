@@ -1,0 +1,142 @@
+.Users {
+    overflow-x: hidden;
+}
+
+.user-list {
+    background-color: #282c34;
+    height: 100vh;
+    text-align: left;
+    padding: 30px 50px;
+    color: white;
+    overflow: hidden;
+}
+
+.col-8, .col-4 {
+    padding: 0;
+}
+
+.user-list h3 {
+    color: crimson;
+}
+
+.user-list hr {
+    background-color: white;
+}
+
+.home-page h1 {
+    color: #282c34;
+}
+
+.home-page {
+    text-align: center;
+    height: 100vh;
+    padding: 70px;
+    -webkit-box-shadow: inset 27px 0px 53px -10px rgba(40,44,52,0.66);
+    -moz-box-shadow: inset 27px 0px 53px -10px rgba(40,44,52,0.66);
+    box-shadow: inset 27px 0px 53px -10px rgba(40,44,52,0.66);
+    overflow: auto;
+}
+
+.home-page .col-9 {
+    text-align: left;
+}
+
+.avatar {
+    background-color: white;
+    border-radius: 50%;
+    height: 150px;
+    width: 150px;
+}
+
+.welcome {
+    padding-top: 50px;
+}
+
+.user {
+    padding-left: 30px;
+    margin-bottom: 15px;
+    width:100%;
+    text-align: left;
+}
+
+.user button {
+    background-color: transparent;
+    color: white;
+    font-size: calc(5px + 2vmin);
+    border: 0;
+}
+
+.chatBox {
+    background-color: crimson;
+    margin-top: 50px;
+    min-height: 40vh;
+    min-width: 40%;
+    border-radius: 5px;
+    padding: 30px;
+}
+
+.chatBox hr {
+    background-color: white;
+}
+
+.yellow-header {
+    background-color: darkkhaki;
+    height: 20%;
+}
+
+.name-header {
+    text-align: left;
+}
+
+.typeField {
+    width: 80%;
+    border-radius: 5px;
+    border: 0;
+    padding: 4px 10px;
+}
+
+.inputDiv {
+    display: block;
+    margin : 0 auto;
+}
+
+.btnSend {
+    margin-left: 10px;
+    border: 0;
+    border-radius: 5px;
+    color: white;
+    background-color: #282c34;
+    padding: 4px 10px;
+}
+
+.btnSendAll {
+    margin-left: 10px;
+    border: 0;
+    border-radius: 5px;
+    color: white;
+    background-color: crimson;
+    padding: 4px 10px;
+}
+
+.messages {
+    height: 150px;
+}
+
+.activeCircle {
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    background-color: green;
+    display: inline-block;
+    margin-left: 10px;
+}
+
+.inactiveCircle {
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    background-color: transparent;
+    border: solid green 1.5px;
+    display: inline-block;
+    margin-left: 10px;
+}
