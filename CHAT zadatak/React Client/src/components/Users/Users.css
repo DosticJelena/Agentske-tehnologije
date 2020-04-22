@@ -120,6 +120,32 @@
 
 .messages {
     height: 150px;
+    overflow: auto;
+    padding: 0 50px;
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.messages::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Hide scrollbar for IE and Edge */
+.messages {
+    -ms-overflow-style: none;
+}
+
+.message-left {
+    color: white;
+    float: left;
+    display: block;
+}
+
+.message-right {
+    color: white;
+    text-align: right;
+    display: block;
 }
 
 .activeCircle {
