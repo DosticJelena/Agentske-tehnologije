@@ -11,6 +11,7 @@ class Users extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
+            BASE_URL: "http://localhost:8080/WAR_-_Chat/rest",
             boxes: [],
             users: [
                 { id: 1, name: "Prvi Prvic", active: false },
@@ -27,48 +28,47 @@ class Users extends React.Component {
         this.setState({ msgContent: event.target.value });
     }
 
-    
+
     sendToAll = event => {
         event.preventDefault();
         console.log("SVI");
-        console.log(this.state.msgContent)
+        console.log(this.state.msgContent);
 
-        /*
-        axios.post(".../messages/all",{
-            subject: this.state.subject,
-            content: this.state.content
-        }).then((reponse) => {
-
+        axios.post(this.state.BASE_URL + "/messages/all",{
+            subject: "Subject (All)",
+            content: this.state.msgContent,
+            senderId: 1,
+            receiverId: 1
+        }).then((response) => {
+            console.log(response);
         }).catch((error) => console.log(error)); //TODO: notification manager
-        */
+        
     }
 
     getLoggedUsers = () => {
         console.log("LOGGED USERS");
 
-        /*
-        axios.get(".../users/loggedIn")
-        .then((response) => {
-            console.log(response);
-        })
-        .catch((error) => {
+        axios.get(this.state.BASE_URL + "/users/loggedIn")
+            .then((response) => {
+                console.log(response);
+                this.setState({ loggedInUsers: response.data });
+            })
+            .catch((error) => {
 
-        })
-        */
+            })
     }
 
     getRegisteredUsers = () => {
         console.log("REGISTERED USERS");
 
-        /*
-        axios.get(".../users/registered")
-        .then((response) => {
-            console.log(response);
-        })
-        .catch((error) => {
+        axios.get(this.state.BASE_URL + "/users/registered")
+            .then((response) => {
+                console.log(response);
+                this.setState({ users: response.data });
+            })
+            .catch((error) => {
 
-        })
-        */
+            })
     }
 
     changeActiveState = (userId) => {
@@ -96,25 +96,24 @@ class Users extends React.Component {
         } else {
             let newBox = {
                 id: userId,
-                name: userName
+                username: userName,
+                messages: []
             }
 
-            this.setState(
-                { boxes: [...this.state.boxes, newBox] }
-            )
-            this.changeActiveState(userId);
+            axios.get(this.state.BASE_URL + "/messages/" + userId)
+                .then((response) => {
+                    console.log(response);
+                    newBox.messages = response.data;
+                    this.setState(
+                        { boxes: [...this.state.boxes, newBox] }
+                    )
+                    this.changeActiveState(userId);
+                })
+                .catch((error) => {
+
+                })
+
         }
-    }
-    
-    getAllMessages = user => {
-        console.log("SPISAK SVIH PORUKA: " + user);
-
-        /*
-        axios.get(".../messages/{user}")
-        .then((reponse) => {
-
-        }).catch((error) => console.log(error)); //TODO: notification manager
-        */
     }
 
     componentDidMount() {
@@ -142,13 +141,13 @@ class Users extends React.Component {
                             <h4>Say hi to someone!</h4>
                             <br />
                             {this.state.users.map((user) =>
-                                <User onClickk={() => this.showChatBox(user.name, user.id)} name={user.name} active={user.active} key={user.id} id={user.id} />
+                                <User onClickk={() => this.showChatBox(user.username, user.id)} name={user.username} active={user.active} key={user.id} id={user.id} />
                             )}
                             <br />
                             <hr />
                             <label>Send message to all logged users:</label>
                             <div>
-                                <input type="text" className="typeField" value={this.state.msgContent} name="msgContent" onChange={this.handleChange}/>
+                                <input type="text" className="typeField" value={this.state.msgContent} name="msgContent" onChange={this.handleChange} />
                                 <button onClick={this.sendToAll} className="btnSendAll">Send</button>
                             </div>
                         </div>
@@ -164,7 +163,7 @@ class Users extends React.Component {
                                 </div>
                             </div>
                             {this.state.boxes.reverse().map((box) =>
-                                <ChatBox key={box.id} userName={box.name} userId={box.id} getMessages={() => this.getAllMessages(box.id)} closeBox={() => this.closeBox(box.id)} />
+                                <ChatBox key={box.id} userName={box.username} userId={box.id} messages={box.messages} closeBox={() => this.closeBox(box.id)} />
                             )}
                         </div>
                     </div>

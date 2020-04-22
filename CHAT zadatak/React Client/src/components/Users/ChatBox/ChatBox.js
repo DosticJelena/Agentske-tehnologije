@@ -7,8 +7,10 @@ class ChatBox extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            BASE_URL: "http://localhost:8080/WAR_-_Chat/rest",
             subject: 'From: ',
             content: '',
+            messages: []
         }
     }
 
@@ -22,14 +24,34 @@ class ChatBox extends React.Component {
         console.log(this.state.subject)
         console.log(this.state.content)
 
-        /*
-        axios.post(".../messages/{user}",{
+        axios.post(this.state.BASE_URL + "/messages/" + this.props.userId, {
             subject: this.state.subject,
-            content: this.state.content
-        }).then((reponse) => {
-
+            content: this.state.content,
+            senderId: 1,
+            receiverId: this.props.userId
+        }).then((response) => {
+            console.log(response);
+            this.setState({ content: "" });
+            this.getAllMessages();
         }).catch((error) => console.log(error)); //TODO: notification manager
-        */
+
+    }
+
+    getAllMessages = () => {
+        axios.get(this.state.BASE_URL + "/messages/" + this.props.userId)
+            .then((response) => {
+                console.log(response);
+                this.setState(
+                    { messages: response.data }
+                )
+            })
+            .catch((error) => {
+
+            })
+    }
+
+    componentDidMount() {
+        this.getAllMessages();
     }
 
     render() {
@@ -48,8 +70,12 @@ class ChatBox extends React.Component {
                     </div>
                 </div>
                 <hr />
-                <div className="row messages">
-
+                <div className="messages">
+                    {this.state.messages.reverse().map((msg) =>
+                        <div key={msg.id} className="row message-right">
+                            <small>00:00</small>
+                            <p>{msg.content}</p>
+                        </div>)}
                 </div>
                 <hr />
                 <div className="row inputDiv">
