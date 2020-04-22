@@ -3,7 +3,7 @@ package beans;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
@@ -15,6 +15,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import data.UsersAndMessages;
 import models.User;
 import models.UserMessage;
 
@@ -23,21 +24,11 @@ import models.UserMessage;
 @LocalBean
 public class ChatBean implements ChatRemote {
 
-	private List<User> users = new ArrayList<User>();
-	private List<UserMessage> messages = new ArrayList<UserMessage>();
+	@EJB
+	private UsersAndMessages data;
 	
 	public ChatBean() {
-		users.add(new User(1, "prvi.prvic","prvi"));
-		users.add(new User(2, "drugi.drugic","drugi"));
-		users.add(new User(3, "treci.trecic","treci"));
-		users.add(new User(4, "cetvrti.cetvrtic","cetvrti"));
-		users.add(new User(5, "peti.petic","peti"));
 		
-		messages.add(new UserMessage("Subject (Predefined)", "Pozdrav sa servera 1", 1, 1));
-		messages.add(new UserMessage("Subject (Predefined)", "Pozdrav sa servera 2", 1, 2));
-		messages.add(new UserMessage("Subject (Predefined)", "Pozdrav sa servera 3", 1, 3));
-		messages.add(new UserMessage("Subject (Predefined)", "Pozdrav sa servera 4", 1, 4));
-		messages.add(new UserMessage("Subject (Predefined)", "Pozdrav sa servera 5", 1, 5));
 	}
 	
 	@GET
@@ -66,7 +57,7 @@ public class ChatBean implements ChatRemote {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<User> getLoggedInUsers() {
 		//TODO: status ulogovan
-		return users;
+		return data.getUsers();
 	}
 	
 	@DELETE
@@ -81,7 +72,7 @@ public class ChatBean implements ChatRemote {
 	@Path("/users/registered")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<User> getRegisteredUsers() {
-		return users;
+		return data.getUsers();
 	}
 	
 	@POST
@@ -89,11 +80,11 @@ public class ChatBean implements ChatRemote {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public List<UserMessage> sendMessageToAllUsers(UserMessage msg) {
-		for (User u : users) {
-			msg.setReceiverId(u.getId());
-			messages.add(msg);
+		for (int i=0;i<data.getUsers().size();i++) {
+			long receiver = data.getUsers().get(i).getId();
+			data.getMessages().add(new UserMessage(msg.getSubject(), msg.getContent(), msg.getSenderId(), receiver));
 		}
-		return messages;
+		return data.getMessages();
 	}
 	
 	@POST
@@ -102,9 +93,10 @@ public class ChatBean implements ChatRemote {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public UserMessage sendMessageToUser(@PathParam("userId") long userId, UserMessage msg) {
 		if (msg.getReceiverId() == userId) {
-			messages.add(msg);
+			msg.setId();
+			data.getMessages().add(msg);
 			System.out.println(msg);
-			System.out.println(messages.size());
+			System.out.println(data.getMessages().size());
 		}
 		return msg;
 	}
@@ -114,7 +106,7 @@ public class ChatBean implements ChatRemote {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<UserMessage> getAllUserMessages(@PathParam("userId") long userId) {
 		List<UserMessage> userMessages = new ArrayList<>();
-		for(UserMessage m: messages) {
+		for(UserMessage m: data.getMessages()) {
 			if (m.getReceiverId() == userId) {
 				userMessages.add(m);
 			}
