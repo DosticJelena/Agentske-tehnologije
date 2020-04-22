@@ -1,9 +1,11 @@
 package models;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 public class UserMessage implements Serializable {
 
+	private UUID id;
 	private String subject;
 	private String content;
 	private long senderId;
@@ -19,6 +21,7 @@ public class UserMessage implements Serializable {
 		this.content = content;
 		this.senderId = sender;
 		this.receiverId = receiver;
+		this.id = UUID.randomUUID();
 	}
 
 	public String getSubject() {
@@ -51,6 +54,14 @@ public class UserMessage implements Serializable {
 
 	public void setReceiverId(long receiver) {
 		this.receiverId = receiver;
+	}
+	
+	public String getId() {
+		return id.toString();
+	}
+	
+	public void setId() {
+		this.id = UUID.randomUUID();
 	}
 
 	@Override
