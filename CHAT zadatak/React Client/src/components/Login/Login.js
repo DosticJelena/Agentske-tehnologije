@@ -20,7 +20,7 @@ class Login extends React.Component {
     login = event => {
         event.preventDefault();
         console.log("LOGGED IN");
-        this.props.history.push('/users');
+        //this.props.history.push('/users');
         /*
         if (password == confPassword){
             axios.post(".../users/login", {
