@@ -138,7 +138,7 @@
 
 .message-left {
     color: white;
-    float: left;
+    text-align: left;
     display: block;
 }
 
@@ -146,6 +146,10 @@
     color: white;
     text-align: right;
     display: block;
+}
+
+.message-left small, .message-right small {
+    color:silver;
 }
 
 .activeCircle {

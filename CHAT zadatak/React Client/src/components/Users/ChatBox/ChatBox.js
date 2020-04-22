@@ -27,7 +27,7 @@ class ChatBox extends React.Component {
         axios.post(this.state.BASE_URL + "/messages/" + this.props.userId, {
             subject: this.state.subject,
             content: this.state.content,
-            senderId: 1,
+            senderId: this.props.loggedUserId,
             receiverId: this.props.userId
         }).then((response) => {
             console.log(response);
@@ -38,7 +38,7 @@ class ChatBox extends React.Component {
     }
 
     getAllMessages = () => {
-        axios.get(this.state.BASE_URL + "/messages/" + this.props.userId)
+        axios.get(this.state.BASE_URL + "/messages/" + this.props.loggedUserId)
             .then((response) => {
                 console.log(response);
                 this.setState(
@@ -56,6 +56,11 @@ class ChatBox extends React.Component {
 
     render() {
 
+        var chatBoxUser = this.props.userId;
+        var filteredMessages = this.state.messages.filter(function (msg) {
+            return msg.senderId == chatBoxUser || msg.receiverId == chatBoxUser;
+        });
+
         return (
             <div className="chatBox">
                 <div className="row ">
@@ -71,11 +76,18 @@ class ChatBox extends React.Component {
                 </div>
                 <hr />
                 <div className="messages">
-                    {this.state.messages.reverse().map((msg) =>
-                        <div key={msg.id} className="row message-right">
-                            <small>00:00</small>
-                            <p>{msg.content}</p>
-                        </div>)}
+                    {filteredMessages.reverse().map((msg) => {
+                        return msg.receiverId == chatBoxUser ?
+                            (<div key={msg.id} className="row message-right">
+                                <small>{this.props.loggedUser} | 00:00</small>
+                                <p>{msg.content}</p>
+                            </div>)
+                            :
+                            (<div key={msg.id} className="row message-left">
+                                <small>{this.props.userName} | 00:00</small>
+                                <p>{msg.content}</p>
+                            </div>)
+                    })}
                 </div>
                 <hr />
                 <div className="row inputDiv">

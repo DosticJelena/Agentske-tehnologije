@@ -14,10 +14,13 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import data.UsersAndMessages;
 import models.User;
 import models.UserMessage;
+import models.UserStatus;
 
 @Stateless
 @Path("/")
@@ -40,32 +43,60 @@ public class ChatBean implements ChatRemote {
 	
 	@POST
 	@Path("/users/register")
-	@Produces(MediaType.TEXT_PLAIN)
-	public String register() {
-		return "Registracija";
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public User register(User user) {
+		long maxId = 0;
+		for (User u : data.getUsers()) {
+			if (u.getId() > maxId) {
+				maxId = u.getId();
+			}
+			if (u.getUsername().equals(user.getUsername())) {
+				return null;
+			}
+		}
+		data.getUsers().add(new User(maxId + 1, user.getUsername(), user.getPassword()));
+		return new User(maxId + 1, user.getUsername(), user.getPassword());
 	}
 	
 	@POST
 	@Path("/users/login")
-	@Produces(MediaType.TEXT_PLAIN)
-	public String login() {
-		return "Logovanje";
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public User login(User user) {
+		for (User u : data.getUsers()) {
+			if (u.getUsername().equals(user.getUsername())) {
+				u.setLoggedIn(UserStatus.LOGGED_IN);
+				return u;
+			}
+		}
+		return null;
 	}
 	
 	@GET
 	@Path("/users/loggedIn")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<User> getLoggedInUsers() {
-		//TODO: status ulogovan
-		return data.getUsers();
+		List<User> loggedUsers = new ArrayList<>();
+		for (User u : data.getUsers()) {
+			if (u.getLoggedIn().equals(UserStatus.LOGGED_IN)) {
+				loggedUsers.add(u);
+			}
+		}
+		return loggedUsers;
 	}
 	
 	@DELETE
 	@Path("/users/loggedIn/{userId}")
 	@Produces(MediaType.TEXT_PLAIN)
-	public String logOutUser(@PathParam("userId") long userId) {
-		String poruka = "Odjava korisnika sa id: " + userId;
-		return poruka;
+	public boolean logOutUser(@PathParam("userId") long userId) {
+		for (User u : data.getUsers()) {
+			if (u.getId() == userId) {
+				u.setLoggedIn(UserStatus.NOT_LOGGED_IN);
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	@GET
@@ -92,12 +123,10 @@ public class ChatBean implements ChatRemote {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public UserMessage sendMessageToUser(@PathParam("userId") long userId, UserMessage msg) {
-		if (msg.getReceiverId() == userId) {
-			msg.setId();
-			data.getMessages().add(msg);
-			System.out.println(msg);
-			System.out.println(data.getMessages().size());
-		}
+		msg.setId();
+		data.getMessages().add(new UserMessage(msg.getSubject(), msg.getContent(), msg.getSenderId(), msg.getReceiverId()));
+		System.out.println(msg);
+		System.out.println(data.getMessages().size());
 		return msg;
 	}
 	
@@ -107,7 +136,7 @@ public class ChatBean implements ChatRemote {
 	public List<UserMessage> getAllUserMessages(@PathParam("userId") long userId) {
 		List<UserMessage> userMessages = new ArrayList<>();
 		for(UserMessage m: data.getMessages()) {
-			if (m.getReceiverId() == userId) {
+			if (m.getReceiverId() == userId || m.getSenderId() == userId) {
 				userMessages.add(m);
 			}
 		}

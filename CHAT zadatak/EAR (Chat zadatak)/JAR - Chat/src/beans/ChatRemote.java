@@ -3,6 +3,7 @@ package beans;
 import java.util.List;
 
 import javax.ejb.Remote;
+import javax.ws.rs.core.Response;
 
 import models.User;
 import models.UserMessage;
@@ -12,13 +13,13 @@ public interface ChatRemote {
 
 	public String test();
 	
-	public String login();
+	public User login(User user);
 
-	public String register();
+	public User register(User user);
 
 	public List<User> getLoggedInUsers();
 	
-	public String logOutUser(long userId);
+	public boolean logOutUser(long userId);
 	
 	public List<User> getRegisteredUsers();
 	

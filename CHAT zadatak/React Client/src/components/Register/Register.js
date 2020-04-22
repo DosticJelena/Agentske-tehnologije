@@ -18,22 +18,26 @@ class Register extends React.Component {
         }
     }
 
+    handleChange = event => {
+        this.setState({ [event.target.name]: event.target.value });
+    }
+
     register = event => {
         event.preventDefault();
         console.log("REGISTERED");
-        this.props.history.push('/users');
-        /*
-        if (password == confPassword){
-            axios.post(".../users/register", {
+        if (this.state.password == this.state.confPassword){
+            axios.post("http://localhost:8080/WAR_-_Chat/rest/users/register", {
                 username: this.state.username,
                 password: this.state.password
             }).then((response) => {
                 console.log(response);
+                this.props.history.push({
+                    pathname: '/' 
+                })
             })
         } else {
             //TODO: notification manager error("")
         }
-        */
 
     }
 
@@ -46,15 +50,15 @@ class Register extends React.Component {
                     <table>
                         <tr>
                             <td className="first-col"><label>Username: </label></td>
-                            <td><input className="input-text" type="text" /></td>
+                            <td><input className="input-text" name="username" onChange={this.handleChange} value={this.state.username} type="text" /></td>
                         </tr>
                         <tr>
                             <td className="first-col"><label>Password: </label></td>
-                            <td><input className="input-text" type="password" /></td>
+                            <td><input className="input-text" name="password" onChange={this.handleChange} value={this.state.password} type="password" /></td>
                         </tr>
                         <tr>
                             <td className="first-col"><label>Confirm Password: </label></td>
-                            <td><input className="input-text" type="password" /></td>
+                            <td><input className="input-text" name="confPassword" onChange={this.handleChange} value={this.state.confPassword} type="password" /></td>
                         </tr>
                     </table>
                     <br />

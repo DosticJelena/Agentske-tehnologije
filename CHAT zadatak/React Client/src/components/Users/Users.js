@@ -2,6 +2,7 @@ import React from 'react';
 import './Users.css';
 import logo from '../../logo192.png';
 import axios from 'axios';
+import { withRouter } from 'react-router-dom';
 //components
 import User from './User/User';
 import ChatBox from './ChatBox/ChatBox';
@@ -34,16 +35,32 @@ class Users extends React.Component {
         console.log("SVI");
         console.log(this.state.msgContent);
 
-        axios.post(this.state.BASE_URL + "/messages/all",{
+        axios.post(this.state.BASE_URL + "/messages/all", {
             subject: "Subject (All)",
             content: this.state.msgContent,
-            senderId: 1,
+            senderId: this.props.location.state.loggedUser.id,
             receiverId: 1
         }).then((response) => {
             console.log(response);
+            this.setState({ msgContent: "" })
+            this.getAllMessages();
         }).catch((error) => console.log(error)); //TODO: notification manager
-        
+
     }
+
+    getAllMessages = () => {
+        axios.get(this.state.BASE_URL + "/messages/" + this.state.loggedUserId)
+            .then((response) => {
+                console.log(response);
+                this.setState(
+                    { messages: response.data }
+                )
+            })
+            .catch((error) => {
+
+            })
+    }
+
 
     getLoggedUsers = () => {
         console.log("LOGGED USERS");
@@ -116,12 +133,27 @@ class Users extends React.Component {
         }
     }
 
+    logOut = event => {
+        event.preventDefault();
+        console.log("LOGOUT")
+    }
+
     componentDidMount() {
         this.getLoggedUsers();
         this.getRegisteredUsers();
+        this.setState({ loggedInUserId: this.props.location.state.id })
     }
 
     render() {
+
+        var loggedId = this.props.location.state.loggedUser.id;
+        var loggedUsername = this.props.location.state.loggedUser.username;
+        var filteredUsers = this.state.users.filter(function (user) {
+            return user.id !== loggedId;
+        });
+
+        console.log(loggedId);
+
         return (
             <div className="Users">
                 <div className="row">
@@ -132,7 +164,7 @@ class Users extends React.Component {
                                     <div className="avatar"></div>
                                 </div>
                                 <div className="col-7 welcome">
-                                    <h3>Hi, Jelena</h3>
+                                    <h3>Hi, {loggedUsername}</h3>
                                 </div>
                             </div>
                             <br />
@@ -140,7 +172,7 @@ class Users extends React.Component {
                             <br />
                             <h4>Say hi to someone!</h4>
                             <br />
-                            {this.state.users.map((user) =>
+                            {filteredUsers.map((user) =>
                                 <User onClickk={() => this.showChatBox(user.username, user.id)} name={user.username} active={user.active} key={user.id} id={user.id} />
                             )}
                             <br />
@@ -150,6 +182,8 @@ class Users extends React.Component {
                                 <input type="text" className="typeField" value={this.state.msgContent} name="msgContent" onChange={this.handleChange} />
                                 <button onClick={this.sendToAll} className="btnSendAll">Send</button>
                             </div>
+                            <hr/>
+                            <button onClick={this.logOut} className="btnSendAll">Log out</button>
                         </div>
                     </div>
                     <div className="col-8">
@@ -163,7 +197,7 @@ class Users extends React.Component {
                                 </div>
                             </div>
                             {this.state.boxes.reverse().map((box) =>
-                                <ChatBox key={box.id} userName={box.username} userId={box.id} messages={box.messages} closeBox={() => this.closeBox(box.id)} />
+                                <ChatBox loggedUser={loggedUsername} loggedUserId={loggedId} key={box.id} userName={box.username} userId={box.id} messages={box.messages} closeBox={() => this.closeBox(box.id)} />
                             )}
                         </div>
                     </div>
@@ -173,4 +207,4 @@ class Users extends React.Component {
     }
 }
 
-export default Users;
+export default withRouter(Users);

@@ -8,11 +8,17 @@ public class User implements Serializable {
 	private long id;
 	private String username;
 	private String password;
+	private UserStatus loggedIn;
+	
+	public User() {
+		
+	}
 	
 	public User(long id, String username, String password) {
 		this.id = id;
 		this.username = username;
 		this.password = password;
+		this.loggedIn = UserStatus.NOT_LOGGED_IN;
 	}
 
 	public String getUsername() {
@@ -33,6 +39,14 @@ public class User implements Serializable {
 
 	public long getId() {
 		return id;
+	}
+
+	public UserStatus getLoggedIn() {
+		return loggedIn;
+	}
+
+	public void setLoggedIn(UserStatus loggedIn) {
+		this.loggedIn = loggedIn;
 	}
 
 	@Override
