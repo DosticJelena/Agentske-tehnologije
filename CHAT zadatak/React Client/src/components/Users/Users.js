@@ -2,7 +2,8 @@ import React from 'react';
 import './Users.css';
 import logo from '../../logo192.png';
 import axios from 'axios';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Redirect } from 'react-router-dom';
+import { NotificationManager } from 'react-notifications';
 //components
 import User from './User/User';
 import ChatBox from './ChatBox/ChatBox';
@@ -29,6 +30,11 @@ class Users extends React.Component {
         this.setState({ msgContent: event.target.value });
     }
 
+    _handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+          this.sendToAll(e);
+        }
+      }
 
     sendToAll = event => {
         event.preventDefault();
@@ -44,8 +50,19 @@ class Users extends React.Component {
             console.log(response);
             this.setState({ msgContent: "" })
             this.getAllMessages();
-        }).catch((error) => console.log(error)); //TODO: notification manager
+            this.closeAllBoxes();
+            NotificationManager.success("Successfully sent!", "", 3000);
+        }).catch(() => NotificationManager.error("Something went wrong. Please try again later.", "", 3000));
 
+    }
+
+    closeAllBoxes = () => {
+        for (let i = 0; i < this.state.users.length; i++) {
+            // eslint-disable-next-line
+            this.state.users[i].active = false;
+            this.forceUpdate()
+            this.setState({ boxes: [] })
+        }
     }
 
     getAllMessages = () => {
@@ -135,35 +152,47 @@ class Users extends React.Component {
 
     logOut = event => {
         event.preventDefault();
-        console.log("LOGOUT")
+        axios.delete(this.state.BASE_URL + "/users/" + this.props.location.state.loggedUser.id)
+            .then((response) => {
+                console.log(response);
+
+            })
+            .catch((error) => {
+
+            })
+        this.props.history.push("/"); //privremeno
     }
 
     componentDidMount() {
-        this.getLoggedUsers();
-        this.getRegisteredUsers();
-        this.setState({ loggedInUserId: this.props.location.state.id })
+        if (this.props.location.state != undefined){
+            this.getLoggedUsers();
+            this.getRegisteredUsers();
+            this.setState({ loggedInUserId: this.props.location.state.id })
+        }
     }
 
     render() {
 
-        var loggedId = this.props.location.state.loggedUser.id;
-        var loggedUsername = this.props.location.state.loggedUser.username;
-        var filteredUsers = this.state.users.filter(function (user) {
-            return user.id !== loggedId;
-        });
-
-        console.log(loggedId);
-
-        return (
+        if (this.props.location.state != undefined){
+            var loggedId = this.props.location.state.loggedUser.id;
+            var loggedUsername = this.props.location.state.loggedUser.username;
+            var filteredUsers = this.state.users.filter(function (user) {
+                return user.id !== loggedId;
+            });
+    
+            console.log(loggedId);
+        }
+        
+        return this.props.location.state != undefined ? (
             <div className="Users">
                 <div className="row">
-                    <div className="col-4">
+                    <div className="col-12 col-md-6 col-lg-4 .col-xl-4">
                         <div className="user-list">
                             <div className="row">
-                                <div className="col-5">
+                                <div className="col-4 col-sm-4 col-md-12 .col-xl-5 col-lg-5">
                                     <div className="avatar"></div>
                                 </div>
-                                <div className="col-7 welcome">
+                                <div className="col-8 col-sm-8 .col-xl-7 col-lg-7 col-md-12 welcome">
                                     <h3>Hi, {loggedUsername}</h3>
                                 </div>
                             </div>
@@ -172,21 +201,23 @@ class Users extends React.Component {
                             <br />
                             <h4>Say hi to someone!</h4>
                             <br />
-                            {filteredUsers.map((user) =>
-                                <User onClickk={() => this.showChatBox(user.username, user.id)} name={user.username} active={user.active} key={user.id} id={user.id} />
-                            )}
+                            <div className="userss">
+                                {filteredUsers.map((user) =>
+                                    <User isLoggedIn={user.loggedIn} onClickk={() => this.showChatBox(user.username, user.id)} name={user.username} active={user.active} key={user.id} id={user.id} />
+                                )}
+                            </div>
                             <br />
                             <hr />
                             <label>Send message to all logged users:</label>
                             <div>
-                                <input type="text" className="typeField" value={this.state.msgContent} name="msgContent" onChange={this.handleChange} />
+                                <input type="text" className="typeField" onKeyDown={this._handleKeyDown} value={this.state.msgContent} name="msgContent" onChange={this.handleChange} />
                                 <button onClick={this.sendToAll} className="btnSendAll">Send</button>
                             </div>
-                            <hr/>
+                            <hr />
                             <button onClick={this.logOut} className="btnSendAll">Log out</button>
                         </div>
                     </div>
-                    <div className="col-8">
+                    <div className="col-12 col-md-6 col-lg-8 .col-xl-8">
                         <div className="home-page">
                             <div className="row">
                                 <div className="col-9">
@@ -203,7 +234,7 @@ class Users extends React.Component {
                     </div>
                 </div>
             </div>
-        );
+        ) : (<Redirect to="/"/>);
     }
 }
 

@@ -2,6 +2,21 @@
     overflow-x: hidden;
 }
 
+.userss {
+    overflow: auto;
+    height: 170px;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.userss::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Hide scrollbar for IE and Edge */
+.userss {
+    -ms-overflow-style: none;
+}
+
 .user-list {
     background-color: #282c34;
     height: 100vh;
@@ -11,7 +26,7 @@
     overflow: hidden;
 }
 
-.col-8, .col-4 {
+.col-8, .col-lg-8, .col-4, .col-lg-4, .col-md-6 {
     padding: 0;
 }
 
@@ -44,8 +59,8 @@
 .avatar {
     background-color: white;
     border-radius: 50%;
-    height: 150px;
-    width: 150px;
+    height: 100px;
+    width: 100px;
 }
 
 .welcome {
@@ -161,12 +176,31 @@
     margin-left: 10px;
 }
 
+.redActiveCircle {
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    background-color: red;
+    display: inline-block;
+    margin-left: 10px;
+}
+
 .inactiveCircle {
     height: 10px;
     width: 10px;
     border-radius: 50%;
     background-color: transparent;
     border: solid green 1.5px;
+    display: inline-block;
+    margin-left: 10px;
+}
+
+.redInactiveCircle {
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    background-color: transparent;
+    border: solid red 1.5px;
     display: inline-block;
     margin-left: 10px;
 }

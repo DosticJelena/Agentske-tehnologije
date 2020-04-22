@@ -6,6 +6,8 @@ import Register from './components/Register/Register';
 import Login from './components/Login/Login';
 import Users from './components/Users/Users';
 //libs
+import 'react-notifications/lib/notifications.css';
+import { NotificationContainer } from 'react-notifications';
 import {
   BrowserRouter as Router,
   Switch,
@@ -27,7 +29,10 @@ function App() {
             <Users />
           </Route>
         </Switch>
+
+        <NotificationContainer />
       </Router>
+      
     </div>
   );
 }

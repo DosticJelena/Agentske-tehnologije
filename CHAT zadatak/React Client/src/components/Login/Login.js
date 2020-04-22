@@ -1,11 +1,13 @@
 import React from 'react';
 import axios from 'axios';
 import logo from '../../logo192.png';
+import { NotificationManager } from 'react-notifications';
 import {
     Link,
-    withRouter,
-    Redirect
+    withRouter
 } from 'react-router-dom';
+
+import Users from '../Users/Users';
 
 class Login extends React.Component {
 
@@ -19,28 +21,35 @@ class Login extends React.Component {
                 username: '',
                 password: '',
                 id: 0
-            }
+            },
+            loggedStatus: false
         }
     }
 
     login = event => {
         event.preventDefault();
-        console.log("LOGGED IN");
-        axios.post("http://localhost:8080/WAR_-_Chat/rest/users/login", {
-            username: this.state.username,
-            password: this.state.password
-        }).then((response) => {
-            this.setState({ loggedInUser: response.data });
-            this.props.history.push({
-                pathname: '/users',
-                state: {
-                    loggedUser: {
-                        username: response.data.username,
-                        id: response.data.id
+        if (this.state.username === '' || this.state.password === '') {
+            NotificationManager.warning("Username and password cannot be empty!", "", 3000);
+        } else {
+            console.log("LOGGED IN");
+            axios.post("http://localhost:8080/WAR_-_Chat/rest/users/login", {
+                username: this.state.username,
+                password: this.state.password
+            }).then((response) => {
+                this.setState({ loggedInUser: response.data, loggedStatus: true});
+                NotificationManager.success("Welcome back!", "", 3000);
+                this.props.history.push({
+                    pathname: '/users',
+                    state: {
+                        loggedUser: {
+                            username: response.data.username,
+                            id: response.data.id,
+                            status: this.state.loggedStatus
+                        }
                     }
-                }  
-            })
-        })
+                })
+            }).catch((error) => NotificationManager.error("There is no registered users with given username and password.", "", 3000));
+        }
     }
 
     handleChange = event => {
@@ -65,8 +74,7 @@ class Login extends React.Component {
                 </form>
                 <br />
                 <small>Doesn't have an account? <Link to="/register">Register!</Link></small>
-            </header>
-        );
+            </header>);
     }
 }
 

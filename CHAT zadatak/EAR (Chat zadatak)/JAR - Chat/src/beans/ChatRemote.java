@@ -13,13 +13,13 @@ public interface ChatRemote {
 
 	public String test();
 	
-	public User login(User user);
+	public Response login(User user);
 
-	public User register(User user);
+	public Response register(User user);
 
 	public List<User> getLoggedInUsers();
 	
-	public boolean logOutUser(long userId);
+	public Response logOutUser(long userId);
 	
 	public List<User> getRegisteredUsers();
 	

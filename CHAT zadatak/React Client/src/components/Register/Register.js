@@ -5,6 +5,7 @@ import {
     Link,
     withRouter
 } from 'react-router-dom';
+import { NotificationManager } from 'react-notifications';
 
 class Register extends React.Component {
 
@@ -25,18 +26,21 @@ class Register extends React.Component {
     register = event => {
         event.preventDefault();
         console.log("REGISTERED");
-        if (this.state.password == this.state.confPassword){
+        if (this.state.username === '' || this.state.password === '' || this.state.confPassword === '') {
+            NotificationManager.warning("Fields cannot be empty!", "", 3000);
+        } else if (this.state.password == this.state.confPassword){
             axios.post("http://localhost:8080/WAR_-_Chat/rest/users/register", {
                 username: this.state.username,
                 password: this.state.password
             }).then((response) => {
                 console.log(response);
+                NotificationManager.success("Please log in now.","Successfully registered!",3000);
                 this.props.history.push({
                     pathname: '/' 
                 })
-            })
+            }).catch(() => NotificationManager.warning("User with given username already exists.","",3000))
         } else {
-            //TODO: notification manager error("")
+            NotificationManager.warning("Passwords doesn't match.","",3000);
         }
 
     }
@@ -49,15 +53,15 @@ class Register extends React.Component {
                 <form onSubmit={this.register}>
                     <table>
                         <tr>
-                            <td className="first-col"><label>Username: </label></td>
+                            <td className="first-col"><label>Username: * </label></td>
                             <td><input className="input-text" name="username" onChange={this.handleChange} value={this.state.username} type="text" /></td>
                         </tr>
                         <tr>
-                            <td className="first-col"><label>Password: </label></td>
+                            <td className="first-col"><label>Password: * </label></td>
                             <td><input className="input-text" name="password" onChange={this.handleChange} value={this.state.password} type="password" /></td>
                         </tr>
                         <tr>
-                            <td className="first-col"><label>Confirm Password: </label></td>
+                            <td className="first-col"><label>Confirm Password: * </label></td>
                             <td><input className="input-text" name="confPassword" onChange={this.handleChange} value={this.state.confPassword} type="password" /></td>
                         </tr>
                     </table>

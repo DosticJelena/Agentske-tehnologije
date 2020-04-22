@@ -50,6 +50,12 @@ class ChatBox extends React.Component {
             })
     }
 
+    _handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            this.sendMessage(e);
+        }
+    }
+
     componentDidMount() {
         this.getAllMessages();
     }
@@ -91,7 +97,7 @@ class ChatBox extends React.Component {
                 </div>
                 <hr />
                 <div className="row inputDiv">
-                    <input type="text" name="msgContent" value={this.state.content} onChange={this.handleChange} className="typeField" />
+                    <input type="text" name="msgContent" onKeyDown={this._handleKeyDown} value={this.state.content} onChange={this.handleChange} className="typeField" />
                     <button onClick={this.sendMessage} className="btnSend">Send</button>
                 </div>
             </div>
