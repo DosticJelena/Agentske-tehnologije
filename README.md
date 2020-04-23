@@ -8,6 +8,7 @@
 - [ ] Moci ce da se pronadje i na `localhost:8080/WAR_-_Chat` do finalne odbrane projekta
 
 ### EAR projekat
+- [x] Pokrece se na Wildfly 11 serveru
 - [x] JAR - Chat sadrzi REST endpoint-e u paketu beans i klasi ChatBean
 - [x] Inicijalni podaci se nalaze u JAR - Chat projektu u paketu data i klasi UsersAndMessages
 - [ ] MDB i Web Socketi za sada nisu implementirani
