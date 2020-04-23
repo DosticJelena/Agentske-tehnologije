@@ -1,6 +1,6 @@
 import React from 'react';
 import './Users.css';
-import logo from '../../logo192.png';
+import logo from '../../assets/ikonica.png';
 import axios from 'axios';
 import { withRouter, Redirect } from 'react-router-dom';
 import { NotificationManager } from 'react-notifications';

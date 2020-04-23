@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import logo from '../../logo192.png';
+import logo from '../../assets/ikonica.png';
 import { NotificationManager } from 'react-notifications';
 import {
     Link,
