@@ -32,27 +32,31 @@ class Users extends React.Component {
 
     _handleKeyDown = (e) => {
         if (e.key === 'Enter') {
-          this.sendToAll(e);
+            this.sendToAll(e);
         }
-      }
+    }
 
     sendToAll = event => {
         event.preventDefault();
         console.log("SVI");
         console.log(this.state.msgContent);
 
-        axios.post(this.state.BASE_URL + "/messages/all", {
-            subject: "Subject (All)",
-            content: this.state.msgContent,
-            senderId: this.props.location.state.loggedUser.id,
-            receiverId: 1
-        }).then((response) => {
-            console.log(response);
-            this.setState({ msgContent: "" })
-            this.getAllMessages();
-            this.closeAllBoxes();
-            NotificationManager.success("Successfully sent!", "", 3000);
-        }).catch(() => NotificationManager.error("Something went wrong. Please try again later.", "", 3000));
+        if (this.state.loggedInUsers.length == 0) {
+            NotificationManager.warning("There is no logged in users.", "", 3000);
+        } else {
+            axios.post(this.state.BASE_URL + "/messages/all", {
+                subject: "Subject (All)",
+                content: this.state.msgContent,
+                senderId: this.props.location.state.loggedUser.id,
+                receiverId: 1
+            }).then((response) => {
+                console.log(response);
+                this.setState({ msgContent: "" })
+                this.getAllMessages();
+                this.closeAllBoxes();
+                NotificationManager.success("Successfully sent!", "", 3000);
+            }).catch(() => NotificationManager.error("Something went wrong. Please try again later.", "", 3000));
+        }
 
     }
 
@@ -164,7 +168,7 @@ class Users extends React.Component {
     }
 
     componentDidMount() {
-        if (this.props.location.state != undefined){
+        if (this.props.location.state != undefined) {
             this.getLoggedUsers();
             this.getRegisteredUsers();
             this.setState({ loggedInUserId: this.props.location.state.id })
@@ -173,16 +177,16 @@ class Users extends React.Component {
 
     render() {
 
-        if (this.props.location.state != undefined){
+        if (this.props.location.state != undefined) {
             var loggedId = this.props.location.state.loggedUser.id;
             var loggedUsername = this.props.location.state.loggedUser.username;
             var filteredUsers = this.state.users.filter(function (user) {
                 return user.id !== loggedId;
             });
-    
+
             console.log(loggedId);
         }
-        
+
         return this.props.location.state != undefined ? (
             <div className="Users">
                 <div className="row">
@@ -234,7 +238,7 @@ class Users extends React.Component {
                     </div>
                 </div>
             </div>
-        ) : (<Redirect to="/"/>);
+        ) : (<Redirect to="/" />);
     }
 }
 
