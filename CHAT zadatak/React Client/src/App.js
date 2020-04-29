@@ -9,7 +9,7 @@ import Users from './components/Users/Users';
 import 'react-notifications/lib/notifications.css';
 import { NotificationContainer } from 'react-notifications';
 import {
-  BrowserRouter as Router,
+  HashRouter as Router,
   Switch,
   Route
 } from 'react-router-dom';
@@ -17,7 +17,7 @@ import {
 function App() {
   return (
     <div className="App">
-      <Router basename="/WAR_-_Chat">
+      <Router basename="/">
         <Switch>
           <Route exact path="/">
             <Login />
