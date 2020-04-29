@@ -1,5 +1,7 @@
 package messagemanager;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
 import javax.ejb.LocalBean;
 import javax.ejb.Singleton;
@@ -21,6 +23,25 @@ public class JMSFactory {
 	private ConnectionFactory connectionFactory;
 	@Resource(lookup = "java:jboss/exported/jms/topic/publicTopic")
 	private Topic defaultTopic;
+	
+	@PostConstruct
+	public void postConstruction() {
+		try {
+			connection = connectionFactory.createConnection("guest", "guest.guest.1");
+			connection.start();
+		} catch (JMSException ex) {
+			throw new IllegalStateException(ex);
+		} 
+	}
+
+	@PreDestroy
+	public void preDestroy() {
+		try {
+			connection.close();
+		} catch (JMSException ex) {
+			System.out.println("Exception while closing the JMS connection." + ex);
+		}
+	}
 	
 	public Session getSession() {
 		try {
