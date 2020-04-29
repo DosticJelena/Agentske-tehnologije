@@ -17,7 +17,7 @@ import {
 function App() {
   return (
     <div className="App">
-      <Router>
+      <Router basename="/WAR_-_Chat">
         <Switch>
           <Route exact path="/">
             <Login />
