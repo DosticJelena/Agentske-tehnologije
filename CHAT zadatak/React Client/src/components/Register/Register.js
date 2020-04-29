@@ -50,7 +50,7 @@ class Register extends React.Component {
             <header className="App-header">
                 <img src={logo} className="App-logo" alt="logo" width="126" height="126" />
                 <br />
-                <form onSubmit={this.register}>
+                <form autoComplete="off" onSubmit={this.register}>
                     <table>
                         <tr>
                             <td className="first-col"><label>Username: * </label></td>

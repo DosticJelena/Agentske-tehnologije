@@ -64,7 +64,7 @@ class Login extends React.Component {
                 <p>
                     Welcome to Chatout app!
               </p>
-                <form onSubmit={this.login}>
+                <form autoComplete="off" onSubmit={this.login}>
                     <table>
                         <tr><td><label>Username: </label><td></td><input className="input-text" onChange={this.handleChange} value={this.state.username} name="username" type="text" /></td></tr>
                         <tr><td><label>Password: </label><td></td><input className="input-text" onChange={this.handleChange} value={this.state.password} name="password" type="password" /></td></tr>

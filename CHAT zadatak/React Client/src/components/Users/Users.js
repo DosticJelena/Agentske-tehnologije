@@ -41,7 +41,7 @@ class Users extends React.Component {
         console.log("SVI");
         console.log(this.state.msgContent);
 
-        if (this.state.loggedInUsers.length == 0) {
+        if (this.state.loggedInUsers.length - 1  == 0) {
             NotificationManager.warning("There is no logged in users.", "", 3000);
         } else {
             axios.post(this.state.BASE_URL + "/messages/all", {
