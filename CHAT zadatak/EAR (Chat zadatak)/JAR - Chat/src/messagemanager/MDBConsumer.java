@@ -21,8 +21,11 @@ public class MDBConsumer implements MessageListener {
 	}
 	
 	@Override
-	public void onMessage(Message arg0) {
-		// TODO Auto-generated method stub
+	public void onMessage(Message message) {
+		
+		// obraditi poruku -> message -> UserMessage
+		// proveriti kome se salje
+		// dodati slanje preko websocket-a
 		
 	}
 
