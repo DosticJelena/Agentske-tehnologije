@@ -3,6 +3,7 @@ package rest;
 import java.util.List;
 
 import javax.ejb.LocalBean;
+import javax.ejb.Remote;
 import javax.ejb.Stateful;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -13,15 +14,19 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.jboss.security.auth.spi.Users.User;
+import models.User;
 
 import models.UserMessage;
 
-@Stateful
 @LocalBean
 @Path("/")
+@Remote(RestBeanRemote.class)
 public class RestBean implements RestBeanRemote {
 
+	public RestBean() {
+		
+	}
+	
 	@POST
 	@Path("/users/login")
 	@Produces(MediaType.APPLICATION_JSON)

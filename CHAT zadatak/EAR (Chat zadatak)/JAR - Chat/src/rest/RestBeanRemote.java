@@ -5,7 +5,7 @@ import java.util.List;
 import javax.ejb.Remote;
 import javax.ws.rs.core.Response;
 
-import org.jboss.security.auth.spi.Users.User;
+import models.User;
 
 import models.UserMessage;
 
