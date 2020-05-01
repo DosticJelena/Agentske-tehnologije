@@ -2,7 +2,9 @@ package agents;
 
 import javax.ejb.EJB;
 import javax.ejb.Remote;
+import javax.jms.JMSException;
 import javax.jms.Message;
+import javax.jms.TextMessage;
 
 //@Stateful
 @Remote(Agent.class)
@@ -21,9 +23,19 @@ public class HostAgent implements Agent {
 	}
 
 	@Override
-	public void handleMessage(Message message) {
-		// TODO Auto-generated method stub
-
+	public void handleMessage(Message msg) {
+		TextMessage tmsg = (TextMessage) msg;
+		String receiver;
+		String method;
+		try {
+			receiver = (String) tmsg.getObjectProperty("receiver");
+			method = (String) tmsg.getObjectProperty("method");
+			if (receiver.equals(agentId)) {
+				System.out.println("[HOST AGENT] Method: " + method);
+			}
+		} catch (JMSException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
