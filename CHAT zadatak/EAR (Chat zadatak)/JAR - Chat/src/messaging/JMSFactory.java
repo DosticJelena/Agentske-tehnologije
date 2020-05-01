@@ -1,6 +1,7 @@
 package messaging;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
 import javax.ejb.LocalBean;
 import javax.ejb.Singleton;
@@ -31,6 +32,15 @@ public class JMSFactory {
 		} catch (JMSException ex) {
 			throw new IllegalStateException(ex);
 		} 
+	}
+	
+	@PreDestroy
+	public void preDestroy() {
+		try {
+			connection.close();
+		} catch (JMSException ex) {
+			System.out.println("Exception while closing the JMS connection." + ex);
+		}
 	}
 	
 	public Session getSession() {
