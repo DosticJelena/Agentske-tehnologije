@@ -1,3 +1,2 @@
-/app/
-/filters/
-/ws/
+/jboss-ejb-client.properties
+/jndi.properties

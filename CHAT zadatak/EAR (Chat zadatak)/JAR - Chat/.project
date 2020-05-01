@@ -3,6 +3,7 @@
 	<name>JAR - Chat</name>
 	<comment></comment>
 	<projects>
+		<project>WAR - Chat</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

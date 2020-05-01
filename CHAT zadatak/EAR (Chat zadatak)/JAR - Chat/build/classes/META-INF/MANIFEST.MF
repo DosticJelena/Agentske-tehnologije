@@ -1,3 +1,2 @@
 Manifest-Version: 1.0
-Class-Path: JAR_-_ChatClient.jar
-
+Class-Path: 
