@@ -15,8 +15,9 @@ public class HostAgent implements Agent {
 	
 	@Override
 	public String init() {
-		// TODO Auto-generated method stub
-		return null;
+		agentId = "host";
+		agents.addRunningAgent(agentId, this);
+		return agentId;
 	}
 
 	@Override
