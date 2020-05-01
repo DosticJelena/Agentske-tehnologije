@@ -1,7 +1,11 @@
 package agents;
 
+import javax.ejb.Remote;
+import javax.ejb.Stateful;
 import javax.jms.Message;
 
+@Stateful
+@Remote(Agent.class)
 public class HostAgent implements Agent {
 
 	@Override
