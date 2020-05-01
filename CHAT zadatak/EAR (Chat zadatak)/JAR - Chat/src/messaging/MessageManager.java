@@ -1,10 +1,18 @@
 package messaging;
 
+import javax.ejb.EJB;
 import javax.jms.MessageConsumer;
 import javax.jms.Session;
 
 public class MessageManager implements MessageManagerRemote {
 
+	@EJB
+	private JMSFactory factory;
+	
+	public MessageManager() {
+		
+	}
+	
 	@Override
 	public void post(AgentMessage msg) {
 		// TODO Auto-generated method stub
