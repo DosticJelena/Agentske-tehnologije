@@ -42,14 +42,12 @@ public class MessageManager implements MessageManagerRemote {
 
 	@Override
 	public Session getSession() {
-		// TODO Auto-generated method stub
-		return null;
+		return factory.getSession();
 	}
 
 	@Override
 	public MessageConsumer getConsumer() {
-		// TODO Auto-generated method stub
-		return null;
+		return factory.getConsumer(session);
 	}
 
 }
