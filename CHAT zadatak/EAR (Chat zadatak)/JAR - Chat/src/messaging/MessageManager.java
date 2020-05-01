@@ -1,7 +1,9 @@
 package messaging;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.ejb.EJB;
+import javax.jms.JMSException;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
@@ -22,6 +24,14 @@ public class MessageManager implements MessageManagerRemote {
 	
 	public MessageManager() {
 		
+	}
+	
+	@PreDestroy
+	public void preDestroy() {
+		try {
+			session.close();
+		} catch (JMSException e) {
+		}
 	}
 	
 	@Override
