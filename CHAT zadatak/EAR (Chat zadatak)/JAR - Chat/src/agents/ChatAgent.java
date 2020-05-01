@@ -28,8 +28,7 @@ public class ChatAgent implements Agent {
 
 	@Override
 	public String getAgentId() {
-		// TODO Auto-generated method stub
-		return null;
+		return agentId;
 	}
 
 }
