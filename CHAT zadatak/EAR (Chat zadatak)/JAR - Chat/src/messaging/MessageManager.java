@@ -4,9 +4,12 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.ejb.EJB;
 import javax.jms.JMSException;
+import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
+
+import messagemanager.AgentMessage;
 
 public class MessageManager implements MessageManagerRemote {
 
@@ -38,6 +41,22 @@ public class MessageManager implements MessageManagerRemote {
 	public void post(AgentMessage msg) {
 		// TODO Auto-generated method stub
 
+	}
+	
+	private Message createTextMessage(AgentMessage amsg) {
+		Message msg = null ;
+		try {
+			msg = session.createTextMessage();
+			for(String property : amsg.userArgs.keySet()) {
+				msg.setObjectProperty(property, amsg.userArgs.get(property));
+			}
+			return msg;
+		} catch (JMSException e) {
+			e.printStackTrace();
+		}
+		return msg;
+		
+		
 	}
 
 	@Override
