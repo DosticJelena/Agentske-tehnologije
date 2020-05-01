@@ -24,6 +24,7 @@ public class MDBConsumer implements MessageListener {
 	
 	@Override
 	public void onMessage(Message message) {
+		
 		String receiver;
 		try {
 			receiver = (String) message.getObjectProperty("receiver");
