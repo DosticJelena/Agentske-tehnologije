@@ -9,7 +9,7 @@ import javax.jms.MessageConsumer;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
 
-import messagemanager.AgentMessage;
+import messaging.AgentMessage;
 
 public class MessageManager implements MessageManagerRemote {
 
@@ -39,8 +39,11 @@ public class MessageManager implements MessageManagerRemote {
 	
 	@Override
 	public void post(AgentMessage msg) {
-		// TODO Auto-generated method stub
-
+		try {
+			defaultProducer.send(createTextMessage(msg));
+		} catch (JMSException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private Message createTextMessage(AgentMessage amsg) {
