@@ -1,3 +1,7 @@
 /util/
 /beans/
 /agents/
+/models/
+/messaging/
+/agentmanager/
+/rest/
