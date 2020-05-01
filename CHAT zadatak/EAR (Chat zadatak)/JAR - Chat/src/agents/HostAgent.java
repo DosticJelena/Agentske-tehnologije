@@ -2,7 +2,6 @@ package agents;
 
 import javax.ejb.EJB;
 import javax.ejb.Remote;
-import javax.ejb.Stateful;
 import javax.jms.Message;
 
 //@Stateful
