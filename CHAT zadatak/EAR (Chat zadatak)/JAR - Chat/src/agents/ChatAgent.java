@@ -16,8 +16,9 @@ public class ChatAgent implements Agent {
 	
 	@Override
 	public String init() {
-		// TODO Auto-generated method stub
-		return null;
+		agentId = "chat";
+		agents.addRunningAgent(agentId, this);
+		return agentId;
 	}
 
 	@Override
