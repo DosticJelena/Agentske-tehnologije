@@ -1,8 +1,5 @@
-/util/
-/beans/
-/agents/
-/models/
+/jboss-ejb-client.properties
+/lookup/
+/rest/
 /messaging/
 /agentmanager/
-/rest/
-/META-INF/
