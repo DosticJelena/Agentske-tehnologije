@@ -58,6 +58,12 @@ public class RestBean implements RestBeanRemote {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response login(User user) {
 		System.out.println("LOGIN");
+		
+		AgentMessage msg = new AgentMessage();
+		msg.userArgs.put("receiver", "host");
+		msg.userArgs.put("method", "login");
+		//msm().post(msg);
+		
 		return null;
 	}
 	
@@ -67,6 +73,11 @@ public class RestBean implements RestBeanRemote {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response register(User user) {
 		System.out.println("REGISTER");
+		
+		AgentMessage msg = new AgentMessage();
+		msg.userArgs.put("receiver", "host");
+		msg.userArgs.put("method", "register");
+		//msm().post(msg);
 		return null;
 	}
 
@@ -75,6 +86,7 @@ public class RestBean implements RestBeanRemote {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<User> getLoggedInUsers() {
 		System.out.println("GET_LOGGED_IN");
+		
 		return null;
 	}
 
@@ -82,6 +94,11 @@ public class RestBean implements RestBeanRemote {
 	@Path("/users/loggedIn/{userId}")
 	public Response logOutUser(long userId) {
 		System.out.println("LOG_OUT");
+		
+		AgentMessage msg = new AgentMessage();
+		msg.userArgs.put("receiver", "host");
+		msg.userArgs.put("method", "logout");
+		//msm().post(msg);
 		return null;
 	}
 
@@ -90,6 +107,7 @@ public class RestBean implements RestBeanRemote {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<User> getRegisteredUsers() {
 		System.out.println("GET_REGISTERED");
+		
 		return null;
 	}
 
@@ -99,6 +117,11 @@ public class RestBean implements RestBeanRemote {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public List<UserMessage> sendMessageToAllUsers(UserMessage msg) {
 		System.out.println("SEND_TO_ALL");
+		
+		AgentMessage amsg = new AgentMessage();
+		amsg.userArgs.put("receiver", "chat");
+		amsg.userArgs.put("method", "all");
+		//msm().post(amsg);
 		return null;
 	}
 
@@ -108,6 +131,11 @@ public class RestBean implements RestBeanRemote {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public UserMessage sendMessageToUser(long userId, UserMessage msg) {
 		System.out.println("SEND_TO_ONE");
+		
+		AgentMessage amsg = new AgentMessage();
+		amsg.userArgs.put("receiver", "chat");
+		amsg.userArgs.put("method", "one");
+		//msm().post(amsg);
 		return null;
 	}
 
@@ -116,6 +144,7 @@ public class RestBean implements RestBeanRemote {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<UserMessage> getAllUserMessages(long userId) {
 		System.out.println("ALL_USER_MSGS");
+		
 		return null;
 	}
 
