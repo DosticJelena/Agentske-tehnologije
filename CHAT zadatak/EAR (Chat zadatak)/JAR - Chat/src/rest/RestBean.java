@@ -2,8 +2,10 @@ package rest;
 
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Remote;
+import javax.ejb.Startup;
 import javax.ejb.Stateful;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -14,17 +16,40 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import agentmanager.AgentManager;
+import agentmanager.AgentManagerRemote;
+import lookup.JNDILookup;
+import messaging.AgentMessage;
+import messaging.MessageManager;
+import messaging.MessageManagerRemote;
 import models.User;
-
 import models.UserMessage;
 
+@Startup
+//@Stateful
 @LocalBean
 @Path("/")
 @Remote(RestBeanRemote.class)
 public class RestBean implements RestBeanRemote {
-
+	
+	@EJB
+	AgentManagerRemote agm;
+	
+	protected AgentManagerRemote agm() {
+		return (AgentManagerRemote)JNDILookup.lookUp(JNDILookup.AgentManagerLookup, AgentManager.class);
+	}
+	protected MessageManagerRemote msm() {
+		return (MessageManagerRemote)JNDILookup.lookUp(JNDILookup.MessageManagerLookup, MessageManager.class);
+	}
+	public void postConstruct() {
+		System.out.println(agm); //null
+		agm().startAgent(JNDILookup.ChatAgentLookup);
+		agm().startAgent(JNDILookup.HostAgentLookup);
+	}
+	
 	public RestBean() {
-		
+		System.out.println("---------------------------------------------------POKRENUO SE");
+		postConstruct();
 	}
 	
 	@POST
