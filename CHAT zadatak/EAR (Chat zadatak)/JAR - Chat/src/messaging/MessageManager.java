@@ -3,14 +3,18 @@ package messaging;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.ejb.EJB;
+import javax.ejb.LocalBean;
+import javax.ejb.Remote;
+import javax.ejb.Stateless;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
 
-import messaging.AgentMessage;
-
+@Stateless
+@LocalBean
+@Remote(MessageManagerRemote.class)
 public class MessageManager implements MessageManagerRemote {
 
 	@EJB
