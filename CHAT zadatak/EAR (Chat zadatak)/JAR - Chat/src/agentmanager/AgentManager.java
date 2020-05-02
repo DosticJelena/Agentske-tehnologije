@@ -2,6 +2,7 @@ package agentmanager;
 
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
+import javax.ejb.Remote;
 import javax.ejb.Stateless;
 
 import agents.Agent;
@@ -9,6 +10,7 @@ import agents.AgentListRemote;
 
 @Stateless
 @LocalBean
+@Remote(AgentManagerRemote.class)
 public class AgentManager implements AgentManagerRemote {
 
 	@EJB
