@@ -56,7 +56,7 @@ public class ChatAgent implements Agent {
 					for (int i=0;i<data().getUsers().size();i++) {
 						if (data().getUsers().get(i).getLoggedIn().equals(UserStatus.LOGGED_IN)) {
 							long rec = data().getUsers().get(i).getId();
-							data().getMessages().add(new UserMessage(msgg.getSubject(), msgg.getContent(), msgg.getSenderId(), rec));
+							data().addMessage(new UserMessage(msgg.getSubject(), msgg.getContent(), msgg.getSenderId(), rec));
 						}
 					}
 					
@@ -65,7 +65,7 @@ public class ChatAgent implements Agent {
 					AgentMessage amsg = (AgentMessage) tmsg.getObject();
 					UserMessage msgg = (UserMessage) amsg.userArgs.get("userMessage");
 					msgg.setId();
-					data().getMessages().add(new UserMessage(msgg.getSubject(), msgg.getContent(), msgg.getSenderId(), msgg.getReceiverId()));
+					data().addMessage(new UserMessage(msgg.getSubject(), msgg.getContent(), msgg.getSenderId(), msgg.getReceiverId()));
 				}
 			}
 		} catch (JMSException e) {
