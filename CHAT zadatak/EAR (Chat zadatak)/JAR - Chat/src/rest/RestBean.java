@@ -3,7 +3,6 @@ package rest;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
@@ -11,12 +10,14 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import agentmanager.AgentManager;
 import agentmanager.AgentManagerRemote;
+import data.DataRemote;
 import data.UsersAndMessages;
 import lookup.JNDILookup;
 import messaging.AgentMessage;
@@ -33,8 +34,9 @@ public class RestBean implements RestBeanRemote {
 	
 	//TODO srediti Response
 	
-	@EJB
-	private UsersAndMessages data;
+	protected DataRemote data() {
+		return (DataRemote)JNDILookup.lookUp(JNDILookup.DataLookup, UsersAndMessages.class);
+	}
 	
 	protected AgentManagerRemote agm() {
 		return (AgentManagerRemote)JNDILookup.lookUp(JNDILookup.AgentManagerLookup, AgentManager.class);
@@ -45,7 +47,7 @@ public class RestBean implements RestBeanRemote {
 	}
 	
 	public void postConstruct() {
-		System.out.println(data); // pogresno - null
+		System.out.println(data()); // pogresno - null
 		System.out.println(agm()); // ispravno
 		System.out.println(msm()); // ispravno
 		agm().startAgent(JNDILookup.ChatAgentLookup); // ispravno
@@ -64,25 +66,24 @@ public class RestBean implements RestBeanRemote {
 	public Response login(User user) {
 		System.out.println("LOGIN");
 		
-		/*
-	    for (User u : data.getUsers()) {
+	    for (User u : data().getUsers()) {
 			if (u.getUsername().equals(user.getUsername())) {
 				if (!u.getPassword().equals(user.getPassword())) {
 					return Response.status(400).entity("Wrong password.").build();
 				}
 				u.setLoggedIn(UserStatus.LOGGED_IN);
+				
+				AgentMessage msg = new AgentMessage();
+				msg.userArgs.put("receiver", "host");
+				msg.userArgs.put("method", "login");
+				msg.userArgs.put("user", user);
+				msm().post(msg);
+				
 				return Response.status(200).entity(u).build();
 			}
 		}
-		*/
-		
-		AgentMessage msg = new AgentMessage();
-		msg.userArgs.put("receiver", "host");
-		msg.userArgs.put("method", "login");
-		msg.userArgs.put("user", user);
-		msm().post(msg);
-		
-		return null;
+	    
+	    return Response.status(500).build();
 	}
 	
 	@POST
@@ -110,7 +111,7 @@ public class RestBean implements RestBeanRemote {
 		msg.userArgs.put("receiver", "host");
 		msg.userArgs.put("method", "register");
 		msg.userArgs.put("user", user);
-		//msm().post(msg);
+		msm().post(msg);
 		
 		return Response.status(200).build();
 	}
@@ -121,7 +122,7 @@ public class RestBean implements RestBeanRemote {
 	public List<User> getLoggedInUsers() {
 		System.out.println("GET_LOGGED_IN");
 		List<User> loggedUsers = new ArrayList<>();
-		for (User u : data.getUsers()) {
+		for (User u : data().getUsers()) {
 			if (u.getLoggedIn().equals(UserStatus.LOGGED_IN)) {
 				loggedUsers.add(u);
 			}
@@ -156,7 +157,7 @@ public class RestBean implements RestBeanRemote {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<User> getRegisteredUsers() {
 		System.out.println("GET_REGISTERED");
-		return data.getUsers();
+		return data().getUsers();
 	}
 
 	@POST
@@ -179,7 +180,7 @@ public class RestBean implements RestBeanRemote {
 		amsg.userArgs.put("receiver", "chat");
 		amsg.userArgs.put("method", "all");
 		amsg.userArgs.put("userMessage", msg);
-		//msm().post(amsg);
+		msm().post(amsg);
 		return null;
 	}
 
@@ -187,13 +188,11 @@ public class RestBean implements RestBeanRemote {
 	@Path("/messages/{userId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public UserMessage sendMessageToUser(long userId, UserMessage msg) {
+	public UserMessage sendMessageToUser(@PathParam("userId") long userId, UserMessage msg) {
 		System.out.println("SEND_TO_ONE");
 		
-		/*
 		msg.setId();
-		data.getMessages().add(new UserMessage(msg.getSubject(), msg.getContent(), msg.getSenderId(), msg.getReceiverId()));
-		 */
+		data().getMessages().add(new UserMessage(msg.getSubject(), msg.getContent(), msg.getSenderId(), msg.getReceiverId()));
 		
 		AgentMessage amsg = new AgentMessage();
 		amsg.userArgs.put("receiver", "chat");
@@ -206,10 +205,10 @@ public class RestBean implements RestBeanRemote {
 	@GET
 	@Path("/messages/{userId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<UserMessage> getAllUserMessages(long userId) {
+	public List<UserMessage> getAllUserMessages(@PathParam("userId") long userId) {
 		System.out.println("ALL_USER_MSGS");
 		List<UserMessage> userMessages = new ArrayList<>();
-		for(UserMessage m: data.getMessages()) {
+		for(UserMessage m: data().getMessages()) {
 			if (m.getReceiverId() == userId || m.getSenderId() == userId) {
 				userMessages.add(m);
 			}
