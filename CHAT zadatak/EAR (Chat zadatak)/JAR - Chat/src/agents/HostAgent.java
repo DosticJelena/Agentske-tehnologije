@@ -63,7 +63,7 @@ public class HostAgent implements Agent {
 						}
 					}
 					User newUser = new User(maxId + 1, regUser.getUsername(), regUser.getPassword());
-					data().getUsers().add(newUser);
+					data().addUser(newUser);
 					
 				} else if (method.equals("login")) { // ---- LOGIN ----
 					
@@ -74,7 +74,7 @@ public class HostAgent implements Agent {
 							if (!u.getPassword().equals(logUser.getPassword())) {
 								return;
 							}
-							u.setLoggedIn(UserStatus.LOGGED_IN);
+							data().changeUserLoggedInStatus(u);
 						}
 					}
 				} else if (method.equals("logout")) { // ---- LOG OUT ----
@@ -82,7 +82,7 @@ public class HostAgent implements Agent {
 					long userId = (long) tmsg.getObjectProperty("userId");
 					for (User u : data().getUsers()) {
 						if (u.getId() == userId) {
-							u.setLoggedIn(UserStatus.NOT_LOGGED_IN);
+							data().changeUserLoggedInStatus(u);
 						}
 					}
 					
