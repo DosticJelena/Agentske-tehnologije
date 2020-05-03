@@ -1,5 +1,6 @@
 package rest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -121,8 +122,13 @@ public class RestBean implements RestBeanRemote {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<User> getLoggedInUsers() {
 		System.out.println("GET_LOGGED_IN");
-		
-		return null;
+		List<User> loggedUsers = new ArrayList<>();
+		for (User u : data.getUsers()) {
+			if (u.getLoggedIn().equals(UserStatus.LOGGED_IN)) {
+				loggedUsers.add(u);
+			}
+		}
+		return loggedUsers;
 	}
 
 	@DELETE
