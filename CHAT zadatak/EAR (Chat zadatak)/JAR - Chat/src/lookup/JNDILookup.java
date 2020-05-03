@@ -16,7 +16,7 @@ import messaging.MessageManagerRemote;
 
 public class JNDILookup {
 
-	public static final String JNDIPathChat = "ejb:/EAR - Chat/JAR_-_Chat/";
+	public static final String JNDIPathChat = "ejb:EAR-Chat/JAR_-_Chat/";
 	public static final String AgentManagerLookup = JNDIPathChat + AgentManager.class.getSimpleName() + "!"
 			+ AgentManagerRemote.class.getName();
 	public static final String MessageManagerLookup = JNDIPathChat + MessageManager.class.getSimpleName() + "!"
