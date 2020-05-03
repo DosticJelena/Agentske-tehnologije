@@ -29,8 +29,7 @@ public class AgentManager implements AgentManagerRemote {
 
 	@Override
 	public Agent getAgentById(String agentId) {
-		// TODO Auto-generated method stub
-		return null;
+		return agents.getRunningAgents().get(agentId);
 	}
 
 }
