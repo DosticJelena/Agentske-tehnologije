@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>EAR - Chat</name>
+	<name>EAR-Chat</name>
 	<comment></comment>
 	<projects>
-		<project>JAR - Chat</project>
 		<project>JAR - ChatClient</project>
+		<project>JAR - Chat</project>
 		<project>WAR - Chat</project>
 	</projects>
 	<buildSpec>

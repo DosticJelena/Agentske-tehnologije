@@ -1,7 +1,9 @@
-/jboss-ejb-client.properties
-/lookup/
-/rest/
-/messaging/
+/META-INF/
 /agentmanager/
 /agents/
 /data/
+/jboss-ejb-client.properties
+/lookup/
+/messaging/
+/models/
+/rest/
