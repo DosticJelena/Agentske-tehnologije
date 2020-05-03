@@ -19,13 +19,12 @@ public class AgentList implements AgentListRemote {
 	
 	@Override
 	public HashMap<String, Agent> getRunningAgents() {
-		// TODO Auto-generated method stub
-		return null;
+		return runningAgents;
 	}
 
 	@Override
 	public void addRunningAgent(String key, Agent agent) {
-		// TODO Auto-generated method stub
+		runningAgents.put(key, agent);
 
 	}
 
