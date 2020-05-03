@@ -2,13 +2,16 @@
 ## CHAT zadatak
 
 
-### React client
-- [x] Klijentska aplikacija za sada radi na [localhost:3000](http://localhost:3000) i pokrece se iz komandne linije (npm start)
-- [x] Buildovana je i prebacena u `WAR - Chat/WebContent` folder
-- [ ] Moci ce da se pronadje i na `localhost:8080/WAR_-_Chat` do finalne odbrane projekta
-
 ### EAR projekat
 - [x] Pokrece se na Wildfly 11 serveru
 - [x] JAR - Chat sadrzi REST endpoint-e u paketu beans i klasi ChatBean
 - [x] Inicijalni podaci se nalaze u JAR - Chat projektu u paketu data i klasi UsersAndMessages
-- [ ] MDB i Web Socketi za sada nisu implementirani
+- [x] MDB i Web Socketi su implementirani
+- [x] klijent-server komunikacija 
+- [ ] server-server komunikacija
+
+### React client
+- [x] Buildovana je i prebacena u `WAR - Chat/WebContent` folder
+- [x] Moze da se pronadje na `localhost:8080/WAR_-_Chat` nakon pokretanja servera
+
+
