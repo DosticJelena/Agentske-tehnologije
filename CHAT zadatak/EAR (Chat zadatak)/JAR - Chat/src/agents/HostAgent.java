@@ -67,7 +67,8 @@ public class HostAgent implements Agent {
 							u.setLoggedIn(UserStatus.LOGGED_IN);
 						}
 					}
-				} else if (method.equals("logout")) {
+				} else if (method.equals("logout")) { // ---- LOG OUT ----
+					
 					long userId = (long) tmsg.getObjectProperty("userId");
 					for (User u : data.getUsers()) {
 						if (u.getId() == userId) {
