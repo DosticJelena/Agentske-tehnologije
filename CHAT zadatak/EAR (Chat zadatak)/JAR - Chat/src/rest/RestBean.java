@@ -4,8 +4,8 @@ import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
-import javax.ejb.Startup;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -33,7 +33,7 @@ public class RestBean implements RestBeanRemote {
 	@EJB
 	private AgentManagerRemote agm;
 	
-	private UsersAndMessages data;
+	@Inject UsersAndMessages data;
 	
 	protected AgentManagerRemote agm() {
 		return (AgentManagerRemote)JNDILookup.lookUp(JNDILookup.AgentManagerLookup, AgentManager.class);
@@ -77,11 +77,26 @@ public class RestBean implements RestBeanRemote {
 	public Response register(User user) {
 		System.out.println("REGISTER");
 		
+		/*
+		long maxId = 0;
+		for (User u : data.getUsers()) {
+			if (u.getId() > maxId) {
+				maxId = u.getId();
+			}
+			if (u.getUsername().equals(user.getUsername())) {
+				return Response.status(400).entity("User with given username already exists.").build();
+			}
+		}
+		User newUser = new User(maxId + 1, user.getUsername(), user.getPassword());
+		data.getUsers().add(newUser); 
+		*/
+		
 		AgentMessage msg = new AgentMessage();
 		msg.userArgs.put("receiver", "host");
 		msg.userArgs.put("method", "register");
 		//msm().post(msg);
-		return null;
+		
+		return Response.status(200).build();
 	}
 
 	@GET
