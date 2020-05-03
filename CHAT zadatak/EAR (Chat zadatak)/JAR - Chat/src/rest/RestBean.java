@@ -136,9 +136,19 @@ public class RestBean implements RestBeanRemote {
 	public Response logOutUser(long userId) {
 		System.out.println("LOG_OUT");
 		
+		/*
+		for (User u : data.getUsers()) {
+			if (u.getId() == userId) {
+				u.setLoggedIn(UserStatus.NOT_LOGGED_IN);
+				return Response.status(200).build();
+			}
+		}
+		 */
+		
 		AgentMessage msg = new AgentMessage();
 		msg.userArgs.put("receiver", "host");
 		msg.userArgs.put("method", "logout");
+		msg.userArgs.put("userId", userId);
 		//msm().post(msg);
 		return null;
 	}

@@ -5,6 +5,7 @@ import javax.ejb.Remote;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.TextMessage;
+import javax.ws.rs.core.Response;
 
 import data.UsersAndMessages;
 import models.User;
@@ -66,6 +67,14 @@ public class HostAgent implements Agent {
 							u.setLoggedIn(UserStatus.LOGGED_IN);
 						}
 					}
+				} else if (method.equals("logout")) {
+					long userId = (long) tmsg.getObjectProperty("userId");
+					for (User u : data.getUsers()) {
+						if (u.getId() == userId) {
+							u.setLoggedIn(UserStatus.NOT_LOGGED_IN);
+						}
+					}
+					
 				}
 			}
 		} catch (JMSException e) {
