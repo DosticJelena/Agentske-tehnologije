@@ -11,6 +11,8 @@ import agentmanager.AgentManagerRemote;
 import agents.Agent;
 import agents.ChatAgent;
 import agents.HostAgent;
+import data.DataRemote;
+import data.UsersAndMessages;
 import messaging.MessageManager;
 import messaging.MessageManagerRemote;
 
@@ -25,6 +27,9 @@ public class JNDILookup {
 			+ Agent.class.getName() + "?stateful";
 	public static final String HostAgentLookup = JNDIPathChat + HostAgent.class.getSimpleName() + "!"
 			+ Agent.class.getName() + "?stateful";
+	
+	public static final String DataLookup = JNDIPathChat + UsersAndMessages.class.getSimpleName() + "!"
+			+ DataRemote.class.getName();
 
 	private static Context createInitialContext() throws NamingException {
         Properties jndiProperties = new Properties();
