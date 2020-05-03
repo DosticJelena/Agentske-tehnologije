@@ -3,8 +3,9 @@ package rest;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.ejb.LocalBean;
-import javax.ejb.Stateless;
+import javax.ejb.Stateful;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -28,11 +29,9 @@ import models.UserMessage;
 import models.UserStatus;
 
 @Path("/")
-@Stateless
+@Stateful
 @LocalBean
 public class RestBean implements RestBeanRemote {
-	
-	//TODO srediti Response
 	
 	protected DataRemote data() {
 		return (DataRemote)JNDILookup.lookUp(JNDILookup.DataLookup, UsersAndMessages.class);
@@ -47,11 +46,8 @@ public class RestBean implements RestBeanRemote {
 	}
 	
 	public void postConstruct() {
-		System.out.println(data()); // pogresno - null
-		System.out.println(agm()); // ispravno
-		System.out.println(msm()); // ispravno
-		agm().startAgent(JNDILookup.ChatAgentLookup); // ispravno
-		agm().startAgent(JNDILookup.HostAgentLookup); // ispravno
+		agm().startAgent(JNDILookup.ChatAgentLookup); 
+		agm().startAgent(JNDILookup.HostAgentLookup); 
 	}
 	
 	public RestBean() {
@@ -71,7 +67,6 @@ public class RestBean implements RestBeanRemote {
 				if (!u.getPassword().equals(user.getPassword())) {
 					return Response.status(400).entity("Wrong password.").build();
 				}
-				u.setLoggedIn(UserStatus.LOGGED_IN);
 				
 				AgentMessage msg = new AgentMessage();
 				msg.userArgs.put("receiver", "host");
@@ -93,9 +88,8 @@ public class RestBean implements RestBeanRemote {
 	public Response register(User user) {
 		System.out.println("REGISTER");
 		
-		/*
 		long maxId = 0;
-		for (User u : data.getUsers()) {
+		for (User u : data().getUsers()) {
 			if (u.getId() > maxId) {
 				maxId = u.getId();
 			}
@@ -103,9 +97,6 @@ public class RestBean implements RestBeanRemote {
 				return Response.status(400).entity("User with given username already exists.").build();
 			}
 		}
-		User newUser = new User(maxId + 1, user.getUsername(), user.getPassword());
-		data.getUsers().add(newUser); 
-		*/
 		
 		AgentMessage msg = new AgentMessage();
 		msg.userArgs.put("receiver", "host");
@@ -127,6 +118,9 @@ public class RestBean implements RestBeanRemote {
 				loggedUsers.add(u);
 			}
 		}
+		
+		// poslati agentu i dodati web socket
+		
 		return loggedUsers;
 	}
 
@@ -135,20 +129,11 @@ public class RestBean implements RestBeanRemote {
 	public Response logOutUser(long userId) {
 		System.out.println("LOG_OUT");
 		
-		/*
-		for (User u : data.getUsers()) {
-			if (u.getId() == userId) {
-				u.setLoggedIn(UserStatus.NOT_LOGGED_IN);
-				return Response.status(200).build();
-			}
-		}
-		 */
-		
 		AgentMessage msg = new AgentMessage();
 		msg.userArgs.put("receiver", "host");
 		msg.userArgs.put("method", "logout");
 		msg.userArgs.put("userId", userId);
-		//msm().post(msg);
+		msm().post(msg);
 		return null;
 	}
 
@@ -157,6 +142,9 @@ public class RestBean implements RestBeanRemote {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<User> getRegisteredUsers() {
 		System.out.println("GET_REGISTERED");
+		
+		// poslati agentu i dodati web socket
+		
 		return data().getUsers();
 	}
 
@@ -166,15 +154,6 @@ public class RestBean implements RestBeanRemote {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public List<UserMessage> sendMessageToAllUsers(UserMessage msg) {
 		System.out.println("SEND_TO_ALL");
-		
-		/*
-		for (int i=0;i<data.getUsers().size();i++) {
-			if (data.getUsers().get(i).getLoggedIn().equals(UserStatus.LOGGED_IN)) {
-				long receiver = data.getUsers().get(i).getId();
-				data.getMessages().add(new UserMessage(msg.getSubject(), msg.getContent(), msg.getSenderId(), receiver));
-			}
-		}
-		 */
 		
 		AgentMessage amsg = new AgentMessage();
 		amsg.userArgs.put("receiver", "chat");
@@ -198,7 +177,7 @@ public class RestBean implements RestBeanRemote {
 		amsg.userArgs.put("receiver", "chat");
 		amsg.userArgs.put("method", "one");
 		amsg.userArgs.put("userMessage", msg);
-		//msm().post(amsg);
+		msm().post(amsg);
 		return null;
 	}
 
@@ -213,6 +192,9 @@ public class RestBean implements RestBeanRemote {
 				userMessages.add(m);
 			}
 		}
+		
+		// poslati agentu i dodati web socket
+		
 		return userMessages;
 	}
 
