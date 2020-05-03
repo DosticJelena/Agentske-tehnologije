@@ -1,20 +1,24 @@
 package agents;
 
 import javax.ejb.EJB;
+import javax.ejb.LocalBean;
 import javax.ejb.Remote;
+import javax.ejb.Stateful;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.TextMessage;
-import javax.ws.rs.core.Response;
 
 import data.UsersAndMessages;
 import models.User;
 import models.UserStatus;
 
-//@Stateful
+@Stateful
+@LocalBean
 @Remote(Agent.class)
 public class HostAgent implements Agent {
 
+	private static final long serialVersionUID = 1L;
+	
 	@EJB
 	private AgentListRemote agents;
 	

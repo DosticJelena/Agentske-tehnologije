@@ -1,7 +1,9 @@
 package agents;
 
 import javax.ejb.EJB;
+import javax.ejb.LocalBean;
 import javax.ejb.Remote;
+import javax.ejb.Stateful;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.TextMessage;
@@ -10,10 +12,13 @@ import data.UsersAndMessages;
 import models.UserMessage;
 import models.UserStatus;
 
-//@Stateful
+@Stateful
+@LocalBean
 @Remote(Agent.class)
 public class ChatAgent implements Agent {
 
+	private static final long serialVersionUID = 1L;
+	
 	@EJB
 	private UsersAndMessages data;
 	
