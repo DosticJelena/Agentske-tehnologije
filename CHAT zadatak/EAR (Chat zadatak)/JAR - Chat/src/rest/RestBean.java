@@ -158,8 +158,7 @@ public class RestBean implements RestBeanRemote {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<User> getRegisteredUsers() {
 		System.out.println("GET_REGISTERED");
-		
-		return null;
+		return data.getUsers();
 	}
 
 	@POST
