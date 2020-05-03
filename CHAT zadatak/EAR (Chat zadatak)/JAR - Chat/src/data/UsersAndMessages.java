@@ -63,14 +63,19 @@ public class UsersAndMessages implements DataRemote {
 	}
 
 	@Override
-	public void changeUserLoggedInStatus(User user) {
+	public void logInUser(User user) {
 		for (User u : users) {
 			if (u.getUsername().equals(user.getUsername())) {
-				if (u.getLoggedIn().equals(UserStatus.NOT_LOGGED_IN)) {
-					u.setLoggedIn(UserStatus.LOGGED_IN);
-				} else {
-					u.setLoggedIn(UserStatus.NOT_LOGGED_IN);
-				}
+				u.setLoggedIn(UserStatus.LOGGED_IN);
+			}
+		}
+	}
+	
+	@Override
+	public void logOutUser(User user) {
+		for (User u : users) {
+			if (u.getUsername().equals(user.getUsername())) {
+				u.setLoggedIn(UserStatus.NOT_LOGGED_IN);
 			}
 		}
 	}

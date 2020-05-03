@@ -23,7 +23,8 @@ class Users extends React.Component {
             ],
             loggedInUsers: [],
             registeredUsers: [],
-            msgContent: ''
+            msgContent: '',
+            messages: []
         }
     }
 
@@ -91,7 +92,7 @@ class Users extends React.Component {
     }
 
     getAllMessages = () => {
-        axios.get(this.state.BASE_URL + "/messages/" + this.state.loggedUserId)
+        axios.get(this.state.BASE_URL + "/messages/" + this.props.location.state.loggedUser.id)
             .then((response) => {
                 console.log(response);
                 this.setState(
@@ -194,6 +195,8 @@ class Users extends React.Component {
             this.getRegisteredUsers();
             this.setState({ loggedInUserId: this.props.location.state.id })
 
+            this.getAllMessages();
+
             this.socketReg();
             this.socketLog();
         }
@@ -255,7 +258,7 @@ class Users extends React.Component {
                                 </div>
                             </div>
                             {this.state.boxes.reverse().map((box) =>
-                                <ChatBox loggedUser={loggedUsername} loggedUserId={loggedId} key={box.id} userName={box.username} userId={box.id} messages={box.messages} closeBox={() => this.closeBox(box.id)} />
+                                <ChatBox loggedUser={loggedUsername} loggedUserId={loggedId} key={box.id} userName={box.username} userId={box.id} messages={this.state.messages} closeBox={() => this.closeBox(box.id)} />
                             )}
                         </div>
                     </div>

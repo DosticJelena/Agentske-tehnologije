@@ -63,7 +63,7 @@ public class RestBean implements RestBeanRemote {
 	@Path("/users/login")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response login(User user) {
+	public Response login(User user) throws JsonProcessingException {
 		System.out.println("LOGIN");
 		
 	    for (User u : data().getUsers()) {
@@ -77,6 +77,15 @@ public class RestBean implements RestBeanRemote {
 				msg.userArgs.put("method", "login");
 				msg.userArgs.put("user", user);
 				msm().post(msg);
+				
+				ObjectMapper mapper = new ObjectMapper();
+				String jsonString = mapper.writeValueAsString(data().getUsers());
+				// web socket
+				AgentMessage msg2 = new AgentMessage();
+				msg2.userArgs.put("receiver", "ws");
+				msg2.userArgs.put("method", "loggedIn");
+				msg2.userArgs.put("users", jsonString);
+				msm().post(msg2);
 				
 				return Response.status(200).entity(u).build();
 			}

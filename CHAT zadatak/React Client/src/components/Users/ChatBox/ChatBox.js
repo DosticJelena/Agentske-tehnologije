@@ -64,7 +64,7 @@ class ChatBox extends React.Component {
     render() {
 
         var chatBoxUser = this.props.userId;
-        var filteredMessages = this.state.messages.filter(function (msg) {
+        var filteredMessages = this.props.messages.filter(function (msg) {
             return msg.senderId == chatBoxUser || msg.receiverId == chatBoxUser;
         });
 

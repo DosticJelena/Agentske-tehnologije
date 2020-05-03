@@ -14,7 +14,7 @@ import models.UserMessage;
 @Remote
 public interface RestBeanRemote {
 
-	public Response login(User user);
+	public Response login(User user) throws JsonProcessingException;
 
 	public Response register(User user);
 
