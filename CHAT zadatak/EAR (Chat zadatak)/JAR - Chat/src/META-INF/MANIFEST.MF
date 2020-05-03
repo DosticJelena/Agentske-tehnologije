@@ -1,2 +1,3 @@
 Manifest-Version: 1.0
 Class-Path: 
+Dependencies: deployment.EAR-Chat.ear.WAR_-_Chat.war
