@@ -11,7 +11,7 @@ import models.UserMessage;
 
 @Singleton
 @LocalBean
-public class UsersAndMessages {
+public class UsersAndMessages implements DataRemote {
 
 	private List<User> users = new ArrayList<User>();
 	private List<UserMessage> messages = new ArrayList<UserMessage>();
