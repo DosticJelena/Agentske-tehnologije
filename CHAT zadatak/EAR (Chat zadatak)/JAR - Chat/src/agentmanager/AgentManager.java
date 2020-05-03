@@ -7,6 +7,7 @@ import javax.ejb.Stateless;
 
 import agents.Agent;
 import agents.AgentListRemote;
+import lookup.JNDILookup;
 
 @Stateless
 @LocalBean
@@ -22,8 +23,8 @@ public class AgentManager implements AgentManagerRemote {
 	
 	@Override
 	public String startAgent(String name) {
-		// TODO Auto-generated method stub
-		return null;
+		Agent agent = (Agent) JNDILookup.lookUp(name, Agent.class);
+		return agent.init();
 	}
 
 	@Override
