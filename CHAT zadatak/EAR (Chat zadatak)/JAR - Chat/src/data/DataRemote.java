@@ -15,4 +15,9 @@ public interface DataRemote {
 	public List<UserMessage> getMessages();
 	public void setMessages(List<UserMessage> messages);
 	
+	public void addUser(User u);
+	public void changeUserLoggedInStatus(User u);
+	
+	public void addMessage(UserMessage msg);
+	
 }
