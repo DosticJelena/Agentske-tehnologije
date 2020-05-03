@@ -53,9 +53,13 @@ public class MessageManager implements MessageManagerRemote {
 	private Message createTextMessage(AgentMessage amsg) {
 		Message msg = null ;
 		try {
-			msg = session.createTextMessage();
+			msg = session.createObjectMessage(amsg);
 			for(String property : amsg.userArgs.keySet()) {
-				msg.setObjectProperty(property, amsg.userArgs.get(property));
+				if (property.equals("user") || property.equals("userMessage")) {
+					
+				} else {
+					msg.setObjectProperty(property, amsg.userArgs.get(property));
+				}
 			}
 			return msg;
 		} catch (JMSException e) {
