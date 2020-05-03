@@ -6,9 +6,12 @@ import javax.ejb.Remote;
 import javax.ejb.Stateful;
 import javax.jms.JMSException;
 import javax.jms.Message;
-import javax.jms.TextMessage;
+import javax.jms.ObjectMessage;
 
+import data.DataRemote;
 import data.UsersAndMessages;
+import lookup.JNDILookup;
+import messaging.AgentMessage;
 import models.User;
 import models.UserStatus;
 
@@ -22,8 +25,9 @@ public class HostAgent implements Agent {
 	@EJB
 	private AgentListRemote agents;
 	
-	@EJB
-	private UsersAndMessages data;
+	protected DataRemote data() {
+		return (DataRemote)JNDILookup.lookUp(JNDILookup.DataLookup, UsersAndMessages.class);
+	}
 	
 	private String agentId;
 	
@@ -36,7 +40,7 @@ public class HostAgent implements Agent {
 
 	@Override
 	public void handleMessage(Message msg) {
-		TextMessage tmsg = (TextMessage) msg;
+		ObjectMessage tmsg = (ObjectMessage) msg;
 		String receiver;
 		String method;
 		try {
@@ -47,9 +51,10 @@ public class HostAgent implements Agent {
 				
 				if (method.equals("register")) { // ---- REGISTER ----
 					
-					User regUser = (User) tmsg.getObjectProperty("user");
+					AgentMessage amsg = (AgentMessage) tmsg.getObject();
+					User regUser = (User) amsg.userArgs.get("user");
 					long maxId = 0;
-					for (User u : data.getUsers()) {
+					for (User u : data().getUsers()) {
 						if (u.getId() > maxId) {
 							maxId = u.getId();
 						}
@@ -58,12 +63,13 @@ public class HostAgent implements Agent {
 						}
 					}
 					User newUser = new User(maxId + 1, regUser.getUsername(), regUser.getPassword());
-					data.getUsers().add(newUser);
+					data().getUsers().add(newUser);
 					
 				} else if (method.equals("login")) { // ---- LOGIN ----
 					
-					User logUser = (User) tmsg.getObjectProperty("user");
-					for (User u : data.getUsers()) {
+					AgentMessage amsg = (AgentMessage) tmsg.getObject();
+					User logUser = (User) amsg.userArgs.get("user");
+					for (User u : data().getUsers()) {
 						if (u.getUsername().equals(logUser.getUsername())) {
 							if (!u.getPassword().equals(logUser.getPassword())) {
 								return;
@@ -74,7 +80,7 @@ public class HostAgent implements Agent {
 				} else if (method.equals("logout")) { // ---- LOG OUT ----
 					
 					long userId = (long) tmsg.getObjectProperty("userId");
-					for (User u : data.getUsers()) {
+					for (User u : data().getUsers()) {
 						if (u.getId() == userId) {
 							u.setLoggedIn(UserStatus.NOT_LOGGED_IN);
 						}
