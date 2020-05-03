@@ -1,5 +1,6 @@
 package rest;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +16,9 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import agentmanager.AgentManager;
 import agentmanager.AgentManagerRemote;
@@ -110,7 +114,7 @@ public class RestBean implements RestBeanRemote {
 	@GET
 	@Path("/users/loggedIn")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<User> getLoggedInUsers() {
+	public List<User> getLoggedInUsers() throws JsonProcessingException {
 		System.out.println("GET_LOGGED_IN");
 		List<User> loggedUsers = new ArrayList<>();
 		for (User u : data().getUsers()) {
@@ -119,7 +123,14 @@ public class RestBean implements RestBeanRemote {
 			}
 		}
 		
-		// poslati agentu i dodati web socket
+		ObjectMapper mapper = new ObjectMapper();
+		String jsonString = mapper.writeValueAsString(data().getUsers());
+		// web socket
+		AgentMessage msg = new AgentMessage();
+		msg.userArgs.put("receiver", "ws");
+		msg.userArgs.put("method", "loggedIn");
+		msg.userArgs.put("users", jsonString);
+		msm().post(msg);
 		
 		return loggedUsers;
 	}
@@ -140,10 +151,17 @@ public class RestBean implements RestBeanRemote {
 	@GET
 	@Path("/users/registered")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<User> getRegisteredUsers() {
+	public List<User> getRegisteredUsers() throws JsonProcessingException {
 		System.out.println("GET_REGISTERED");
 		
-		// poslati agentu i dodati web socket
+		ObjectMapper mapper = new ObjectMapper();
+		String jsonString = mapper.writeValueAsString(data().getUsers());
+		// web socket
+		AgentMessage msg = new AgentMessage();
+		msg.userArgs.put("receiver", "ws");
+		msg.userArgs.put("method", "registered");
+		msg.userArgs.put("users", jsonString);
+		msm().post(msg);
 		
 		return data().getUsers();
 	}
@@ -178,7 +196,8 @@ public class RestBean implements RestBeanRemote {
 		amsg.userArgs.put("method", "one");
 		amsg.userArgs.put("userMessage", msg);
 		msm().post(amsg);
-		return null;
+		
+		return msg;
 	}
 
 	@GET
@@ -192,8 +211,6 @@ public class RestBean implements RestBeanRemote {
 				userMessages.add(m);
 			}
 		}
-		
-		// poslati agentu i dodati web socket
 		
 		return userMessages;
 	}

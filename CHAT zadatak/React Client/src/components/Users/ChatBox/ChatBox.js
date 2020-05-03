@@ -8,6 +8,7 @@ class ChatBox extends React.Component {
         super(props);
         this.state = {
             BASE_URL: "http://localhost:8080/WAR_-_Chat/rest",
+            WS_HOST: "ws://localhost:8080/WAR_-_Chat/ws",
             subject: 'From: ',
             content: '',
             messages: []

@@ -14,5 +14,9 @@
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/jelen/OneDrive/Desktop/jar_files/jackson-annotations-2.11.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/jelen/OneDrive/Desktop/jar_files/jackson-core-2.11.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/jelen/OneDrive/Desktop/jar_files/jackson-databind-2.11.0.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/JAR - Chat"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

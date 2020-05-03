@@ -13,37 +13,32 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
+
+
 @Singleton
-@ServerEndpoint("/ws")
+@ServerEndpoint("/ws/registered")
 @LocalBean
-public class WSEndPoint {
+public class WSRegistered {
 
 	static List<Session> sessions = new ArrayList<Session>();
 	
 	@OnOpen
 	public void onOpen(Session session) {
 		if (!sessions.contains(session)) {
+			System.out.println("New session!!!");
 			sessions.add(session);
 		}
 	}
 	
 	@OnMessage
-	public void echoTextMessage(Session session, String msg, boolean last) {
+	public void echoTest(String json) {
 		try {
-			if (session.isOpen()) {
-				for (Session s : sessions) {
-					if (!s.getId().equals(session.getId())) {
-						s.getBasicRemote().sendText(msg, last);
-					}
-				}
+			for (Session s : sessions) {
+				s.getBasicRemote().sendText(json);
 			}
 		} catch (IOException e) {
-			try {
-				session.close();
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-		}
+			e.printStackTrace();
+		} 
 	}
 	
 	@OnClose

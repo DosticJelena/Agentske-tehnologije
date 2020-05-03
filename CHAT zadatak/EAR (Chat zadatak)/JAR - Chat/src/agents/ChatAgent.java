@@ -14,7 +14,7 @@ import lookup.JNDILookup;
 import messaging.AgentMessage;
 import models.UserMessage;
 import models.UserStatus;
-import ws.WSEndPoint;
+import ws.WSRegistered;
 
 @Stateful
 @LocalBean
@@ -31,7 +31,7 @@ public class ChatAgent implements Agent {
 	private AgentListRemote agents;
 
 	@EJB
-	private WSEndPoint ws;
+	private WSRegistered ws;
 	
 	private String agentId;
 	

@@ -9,6 +9,8 @@ import javax.jms.MessageListener;
 
 import agents.Agent;
 import agents.AgentListRemote;
+import ws.WSLoggedIn;
+import ws.WSRegistered;
 
 @MessageDriven(activationConfig = {
 		@ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Topic"),
@@ -17,6 +19,12 @@ public class MDBConsumer implements MessageListener {
 
 	@EJB
 	private AgentListRemote agents;
+	
+	@EJB
+	private WSRegistered wsR;
+	
+	@EJB
+	private WSLoggedIn wsL;
 	
 	public MDBConsumer() {
 		
@@ -28,8 +36,18 @@ public class MDBConsumer implements MessageListener {
 		String receiver;
 		try {
 			receiver = (String) message.getObjectProperty("receiver");
-			Agent agent = (Agent) agents.getRunningAgents().get(receiver);
-			agent.handleMessage(message);
+			if (receiver.equals("ws")) {
+				if (((String)message.getObjectProperty("method")).equals("registered")) {
+					wsR.echoTest((String)message.getObjectProperty("users"));
+				} else if (((String)message.getObjectProperty("method")).equals("loggedIn")) {
+					wsL.echoTest((String)message.getObjectProperty("users"));
+				} else if (((String)message.getObjectProperty("method")).equals("messages")) {
+					//wsM.echoTest((String)message.getObjectProperty("messages"));
+				}
+			} else {
+				Agent agent = (Agent) agents.getRunningAgents().get(receiver);
+				agent.handleMessage(message);
+			}
 		} catch (JMSException e) {
 			e.printStackTrace();
 		}

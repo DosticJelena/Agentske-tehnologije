@@ -13,7 +13,7 @@ import data.UsersAndMessages;
 import lookup.JNDILookup;
 import messaging.AgentMessage;
 import models.User;
-import ws.WSEndPoint;
+import ws.WSRegistered;
 
 @Stateful
 @LocalBean
@@ -26,7 +26,7 @@ public class HostAgent implements Agent {
 	private AgentListRemote agents;
 	
 	@EJB
-	private WSEndPoint ws;
+	private WSRegistered ws;
 	
 	protected DataRemote data() {
 		return (DataRemote)JNDILookup.lookUp(JNDILookup.DataLookup, UsersAndMessages.class);

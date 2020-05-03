@@ -14,6 +14,7 @@ class Users extends React.Component {
         super(props)
         this.state = {
             BASE_URL: "http://localhost:8080/WAR_-_Chat/rest",
+            WS_HOST: "ws://localhost:8080/WAR_-_Chat/ws",
             boxes: [],
             users: [
                 { id: 1, name: "Prvi Prvic", active: false },
@@ -26,6 +27,26 @@ class Users extends React.Component {
         }
     }
 
+    socketReg = () => {
+        var urlReg = this.state.WS_HOST + "/registered";
+        var socketReg = new WebSocket(urlReg);
+        socketReg.onmessage = (msg) => {
+            console.log(socketReg.readyState + " ---- (message) ---- ");
+            this.setState({users: JSON.parse(msg.data)});
+        }
+        socketReg.onclose = () => socketReg = null;
+    }
+
+    socketLog = () => {
+        var urlLog = this.state.WS_HOST + "/loggedIn";
+        var socketLog = new WebSocket(urlLog);
+        socketLog.onmessage = (msg) => {
+            console.log(socketLog.readyState + " ---- (message log) ---- ");
+            this.setState({loggedInUsers: JSON.parse(msg.data)});
+        }
+        socketLog.onclose = () => socketLog = null;
+    }
+       
     handleChange = event => {
         this.setState({ msgContent: event.target.value });
     }
@@ -172,6 +193,9 @@ class Users extends React.Component {
             this.getLoggedUsers();
             this.getRegisteredUsers();
             this.setState({ loggedInUserId: this.props.location.state.id })
+
+            this.socketReg();
+            this.socketLog();
         }
     }
 
@@ -184,7 +208,6 @@ class Users extends React.Component {
                 return user.id !== loggedId;
             });
 
-            console.log(loggedId);
         }
 
         return this.props.location.state != undefined ? (
