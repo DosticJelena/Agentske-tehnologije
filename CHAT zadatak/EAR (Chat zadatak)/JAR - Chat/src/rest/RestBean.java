@@ -194,8 +194,13 @@ public class RestBean implements RestBeanRemote {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<UserMessage> getAllUserMessages(long userId) {
 		System.out.println("ALL_USER_MSGS");
-		
-		return null;
+		List<UserMessage> userMessages = new ArrayList<>();
+		for(UserMessage m: data.getMessages()) {
+			if (m.getReceiverId() == userId || m.getSenderId() == userId) {
+				userMessages.add(m);
+			}
+		}
+		return userMessages;
 	}
 
 }
