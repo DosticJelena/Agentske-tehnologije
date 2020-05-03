@@ -6,9 +6,12 @@ import javax.ejb.Remote;
 import javax.ejb.Stateful;
 import javax.jms.JMSException;
 import javax.jms.Message;
-import javax.jms.TextMessage;
+import javax.jms.ObjectMessage;
 
+import data.DataRemote;
 import data.UsersAndMessages;
+import lookup.JNDILookup;
+import messaging.AgentMessage;
 import models.UserMessage;
 import models.UserStatus;
 
@@ -19,8 +22,9 @@ public class ChatAgent implements Agent {
 
 	private static final long serialVersionUID = 1L;
 	
-	@EJB
-	private UsersAndMessages data;
+	protected DataRemote data() {
+		return (DataRemote)JNDILookup.lookUp(JNDILookup.DataLookup, UsersAndMessages.class);
+	}
 	
 	@EJB
 	private AgentListRemote agents;
@@ -36,7 +40,7 @@ public class ChatAgent implements Agent {
 
 	@Override
 	public void handleMessage(Message msg) {
-		TextMessage tmsg = (TextMessage) msg;
+		ObjectMessage tmsg = (ObjectMessage) msg;
 		String receiver;
 		String method;
 		try {
@@ -47,19 +51,21 @@ public class ChatAgent implements Agent {
 				
 				if (method.equals("all")) { // ---- ALL ----
 					
-					UserMessage msgg = (UserMessage) tmsg.getObjectProperty("userMessage");
-					for (int i=0;i<data.getUsers().size();i++) {
-						if (data.getUsers().get(i).getLoggedIn().equals(UserStatus.LOGGED_IN)) {
-							long rec = data.getUsers().get(i).getId();
-							data.getMessages().add(new UserMessage(msgg.getSubject(), msgg.getContent(), msgg.getSenderId(), rec));
+					AgentMessage amsg = (AgentMessage) tmsg.getObject();
+					UserMessage msgg = (UserMessage) amsg.userArgs.get("userMessage");
+					for (int i=0;i<data().getUsers().size();i++) {
+						if (data().getUsers().get(i).getLoggedIn().equals(UserStatus.LOGGED_IN)) {
+							long rec = data().getUsers().get(i).getId();
+							data().getMessages().add(new UserMessage(msgg.getSubject(), msgg.getContent(), msgg.getSenderId(), rec));
 						}
 					}
 					
 				} else if (method.equals("one")) { // ---- ONE ----
 					
-					UserMessage msgg = (UserMessage) tmsg.getObjectProperty("userMessage");
+					AgentMessage amsg = (AgentMessage) tmsg.getObject();
+					UserMessage msgg = (UserMessage) amsg.userArgs.get("userMessage");
 					msgg.setId();
-					data.getMessages().add(new UserMessage(msgg.getSubject(), msgg.getContent(), msgg.getSenderId(), msgg.getReceiverId()));
+					data().getMessages().add(new UserMessage(msgg.getSubject(), msgg.getContent(), msgg.getSenderId(), msgg.getReceiverId()));
 				}
 			}
 		} catch (JMSException e) {
