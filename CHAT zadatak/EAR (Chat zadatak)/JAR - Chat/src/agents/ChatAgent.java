@@ -2,15 +2,21 @@ package agents;
 
 import javax.ejb.EJB;
 import javax.ejb.Remote;
-import javax.ejb.Stateful;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.TextMessage;
+
+import data.UsersAndMessages;
+import models.UserMessage;
+import models.UserStatus;
 
 //@Stateful
 @Remote(Agent.class)
 public class ChatAgent implements Agent {
 
+	@EJB
+	private UsersAndMessages data;
+	
 	@EJB
 	private AgentListRemote agents;
 	
@@ -33,6 +39,18 @@ public class ChatAgent implements Agent {
 			method = (String) tmsg.getObjectProperty("method");
 			if (receiver.equals(agentId)) {
 				System.out.println("[CHAT AGENT] Method: " + method);
+				
+				if (method.equals("all")) { // ---- ALL ----
+					
+					UserMessage msgg = (UserMessage) tmsg.getObjectProperty("userMessage");
+					for (int i=0;i<data.getUsers().size();i++) {
+						if (data.getUsers().get(i).getLoggedIn().equals(UserStatus.LOGGED_IN)) {
+							long rec = data.getUsers().get(i).getId();
+							data.getMessages().add(new UserMessage(msgg.getSubject(), msgg.getContent(), msgg.getSenderId(), rec));
+						}
+					}
+					
+				}
 			}
 		} catch (JMSException e) {
 			e.printStackTrace();

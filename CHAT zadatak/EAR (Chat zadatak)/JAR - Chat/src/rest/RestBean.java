@@ -168,9 +168,19 @@ public class RestBean implements RestBeanRemote {
 	public List<UserMessage> sendMessageToAllUsers(UserMessage msg) {
 		System.out.println("SEND_TO_ALL");
 		
+		/*
+		for (int i=0;i<data.getUsers().size();i++) {
+			if (data.getUsers().get(i).getLoggedIn().equals(UserStatus.LOGGED_IN)) {
+				long receiver = data.getUsers().get(i).getId();
+				data.getMessages().add(new UserMessage(msg.getSubject(), msg.getContent(), msg.getSenderId(), receiver));
+			}
+		}
+		 */
+		
 		AgentMessage amsg = new AgentMessage();
 		amsg.userArgs.put("receiver", "chat");
 		amsg.userArgs.put("method", "all");
+		amsg.userArgs.put("userMessage", msg);
 		//msm().post(amsg);
 		return null;
 	}
