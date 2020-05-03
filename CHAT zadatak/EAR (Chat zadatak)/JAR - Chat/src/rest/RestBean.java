@@ -6,7 +6,6 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
-import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -35,9 +34,7 @@ public class RestBean implements RestBeanRemote {
 	//TODO srediti Response
 	
 	@EJB
-	private AgentManagerRemote agm;
-	
-	@Inject UsersAndMessages data;
+	private UsersAndMessages data;
 	
 	protected AgentManagerRemote agm() {
 		return (AgentManagerRemote)JNDILookup.lookUp(JNDILookup.AgentManagerLookup, AgentManager.class);
@@ -48,14 +45,15 @@ public class RestBean implements RestBeanRemote {
 	}
 	
 	public void postConstruct() {
-		System.out.println(agm); //null
-		agm().startAgent(JNDILookup.ChatAgentLookup);
-		agm().startAgent(JNDILookup.HostAgentLookup);
+		System.out.println(data); // pogresno - null
+		System.out.println(agm()); // ispravno
+		System.out.println(msm()); // ispravno
+		agm().startAgent(JNDILookup.ChatAgentLookup); // ispravno
+		agm().startAgent(JNDILookup.HostAgentLookup); // ispravno
 	}
 	
 	public RestBean() {
 		System.out.println("---------------------------------------------------POKRENUO SE");
-		System.out.println(data);
 		postConstruct();
 	}
 	
@@ -82,7 +80,7 @@ public class RestBean implements RestBeanRemote {
 		msg.userArgs.put("receiver", "host");
 		msg.userArgs.put("method", "login");
 		msg.userArgs.put("user", user);
-		//msm().post(msg);
+		msm().post(msg);
 		
 		return null;
 	}
