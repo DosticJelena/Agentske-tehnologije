@@ -24,11 +24,14 @@ import messaging.MessageManager;
 import messaging.MessageManagerRemote;
 import models.User;
 import models.UserMessage;
+import models.UserStatus;
 
 @Path("/")
 @Stateless
 @LocalBean
 public class RestBean implements RestBeanRemote {
+	
+	//TODO srediti Response
 	
 	@EJB
 	private AgentManagerRemote agm;
@@ -62,9 +65,22 @@ public class RestBean implements RestBeanRemote {
 	public Response login(User user) {
 		System.out.println("LOGIN");
 		
+		/*
+	    for (User u : data.getUsers()) {
+			if (u.getUsername().equals(user.getUsername())) {
+				if (!u.getPassword().equals(user.getPassword())) {
+					return Response.status(400).entity("Wrong password.").build();
+				}
+				u.setLoggedIn(UserStatus.LOGGED_IN);
+				return Response.status(200).entity(u).build();
+			}
+		}
+		*/
+		
 		AgentMessage msg = new AgentMessage();
 		msg.userArgs.put("receiver", "host");
 		msg.userArgs.put("method", "login");
+		msg.userArgs.put("user", user);
 		//msm().post(msg);
 		
 		return null;
@@ -94,6 +110,7 @@ public class RestBean implements RestBeanRemote {
 		AgentMessage msg = new AgentMessage();
 		msg.userArgs.put("receiver", "host");
 		msg.userArgs.put("method", "register");
+		msg.userArgs.put("user", user);
 		//msm().post(msg);
 		
 		return Response.status(200).build();

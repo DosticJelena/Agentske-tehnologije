@@ -5,10 +5,10 @@ import javax.ejb.Remote;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.TextMessage;
-import javax.ws.rs.core.Response;
 
 import data.UsersAndMessages;
 import models.User;
+import models.UserStatus;
 
 //@Stateful
 @Remote(Agent.class)
@@ -41,6 +41,7 @@ public class HostAgent implements Agent {
 				System.out.println("[HOST AGENT] Method: " + method);
 				
 				if (method.equals("register")) { // ---- REGISTER ----
+					
 					User regUser = (User) tmsg.getObjectProperty("user");
 					long maxId = 0;
 					for (User u : data.getUsers()) {
@@ -48,11 +49,23 @@ public class HostAgent implements Agent {
 							maxId = u.getId();
 						}
 						if (u.getUsername().equals(regUser.getUsername())) {
-							return ;
+							return;
 						}
 					}
 					User newUser = new User(maxId + 1, regUser.getUsername(), regUser.getPassword());
 					data.getUsers().add(newUser);
+					
+				} else if (method.equals("login")) { // ---- LOGIN ----
+					
+					User logUser = (User) tmsg.getObjectProperty("user");
+					for (User u : data.getUsers()) {
+						if (u.getUsername().equals(logUser.getUsername())) {
+							if (!u.getPassword().equals(logUser.getPassword())) {
+								return;
+							}
+							u.setLoggedIn(UserStatus.LOGGED_IN);
+						}
+					}
 				}
 			}
 		} catch (JMSException e) {
