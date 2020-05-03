@@ -50,6 +50,11 @@ public class ChatAgent implements Agent {
 						}
 					}
 					
+				} else if (method.equals("one")) { // ---- ONE ----
+					
+					UserMessage msgg = (UserMessage) tmsg.getObjectProperty("userMessage");
+					msgg.setId();
+					data.getMessages().add(new UserMessage(msgg.getSubject(), msgg.getContent(), msgg.getSenderId(), msgg.getReceiverId()));
 				}
 			}
 		} catch (JMSException e) {

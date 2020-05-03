@@ -192,9 +192,15 @@ public class RestBean implements RestBeanRemote {
 	public UserMessage sendMessageToUser(long userId, UserMessage msg) {
 		System.out.println("SEND_TO_ONE");
 		
+		/*
+		msg.setId();
+		data.getMessages().add(new UserMessage(msg.getSubject(), msg.getContent(), msg.getSenderId(), msg.getReceiverId()));
+		 */
+		
 		AgentMessage amsg = new AgentMessage();
 		amsg.userArgs.put("receiver", "chat");
 		amsg.userArgs.put("method", "one");
+		amsg.userArgs.put("userMessage", msg);
 		//msm().post(amsg);
 		return null;
 	}
